@@ -1,0 +1,12 @@
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  color: var(--fg-color);
+  background-color: var(--bg-color);
+}
+
+p,
+ul,
+ol {
+  margin-bottom: 1.5rem;
+}

@@ -1,1 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+@import "css/vars.css";
+@import "css/reset.css";
+@import "css/base.css";
+@import "css/grid.css";
+@import "css/container.css";
+@import "css/form.css";
+@import "css/utilitiy.css";
