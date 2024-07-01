@@ -1,36 +1,67 @@
-<div class="container">
-  <form>
-    <div class="form-field">
-      <label for="title" class="form-label">Titel</label>
-      <input required class="form-input" type="text" formControlName="title" id="title">
-    </div>
-    <div class="form-field">
-      <label for="isbn" class="form-label">ISBN</label>
-      <input required class="form-input" type="text" formControlName="isbn" id="isbn" placeholder="000-0-00000-000-0">
-    </div>
-    <div class="form-field">
-      <label for="year" class="form-label">Erscheinungsjahr</label>
-      <input placeholder="JJJJ" class="form-input" pattern="\d{4}" type="number" minlength="4" maxlength="4"
-        formControlName="year" id="year">
-    </div>
-    <div class="form-field">
-      <label for="pagecount" class="form-label">Anzahl Seiten</label>
-      <input class="form-input" pattern="\d{1,}" type="number" formControlName="pagecount" id="pagecount" minlength="1">
-    </div>
-    <div class="form-field">
-      <label for="language" class="form-label">Sprache</label>
-      <select id="language" class="form-input">
-        <option value="de">Deutsch</option>
-        <option value="en">Englisch</option>
-      </select>
-    </div>
-    <div class="form-field">
-      <label for="group" class="form-label">Sachgruppe</label>
-      <input class="form-input" pattern="^\d{3}\.\d{1,3}$|^\d{3}$" type="text" formControlName="group" id="group"
-        minlength="3" maxlength="7" placeholder="000.000">
-    </div>
-    <div class="ta-center">
-      <button>Eintragen</button>
-    </div>
+<div class="container mb-8">
+  <form [formGroup]="form">
+    <fieldset class=" form-fieldset">
+      <legend class="form-legend">Buch {{ editmode ? 'bearbeiten' : 'eintragen' }}</legend>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div class="form-field md:col-span-6">
+          <label for="title" class="form-label">Titel*</label>
+          <input required class="form-input" type="text" formControlName="title" id="title">
+          <span class="form-error" *ngIf=" control('title').hasError('required')">
+            Dieses Feld ist ein Pflichtfeld
+          </span>
+        </div>
+        <div class="form-field md:col-span-6">
+          <label for="isbn" class="form-label">ISBN*</label>
+          <input required class="form-input" type="text" formControlName="isbn" id="isbn">
+          <span class="form-error" *ngIf="control('isbn').hasError('required')">
+            Dieses Feld ist ein Pflichtfeld
+          </span>
+          <span class="form-error" *ngIf="control('isbn').hasError('isbnUsed')">
+            ISBN bereits in Verwendung
+          </span>
+          <span class="form-error" *ngIf="control('isbn').hasError('isbnInvalidFormat')">
+            Ungültiges Format oder unerlaubte Zeichen verwendet
+          </span>
+          <span class="form-error" *ngIf="control('isbn').hasError('isbnChecksum')">
+            Ungültige ISBN Prüfziffer
+          </span>
+        </div>
+        <div class="form-field md:col-span-2">
+          <label for="year" class="form-label">Jahr</label>
+          <input class="form-input" type="text" formControlName="year" id="year">
+          <span class="form-error" *ngIf="control('year').hasError('pattern')">
+            Nur 4 Zahlen erlaubt
+          </span>
+        </div>
+        <div class="form-field md:col-span-2">
+          <label for="pagecount" class="form-label">Seitenanzahl</label>
+          <input class="form-input" type="text" formControlName="pagecount" id="pagecount">
+          <span class="form-error" *ngIf="control('pagecount').hasError('pattern')">
+            Nur Zahlen erlaubt
+          </span>
+        </div>
+        <div class="form-field md:col-span-2">
+          <label for="language" class="form-label">Sprache</label>
+          <select id="language" class="form-input" formControlName="language">
+            <option value="Deutsch">Deutsch</option>
+            <option value="Englisch">Englisch</option>
+          </select>
+        </div>
+        <div class="form-field md:col-span-3">
+          <label for="group" class="form-label">Sachgruppe</label>
+          <input class="form-input" pattern="{{patterns.ddc}}" type="text" formControlName="group" id="group"
+            minlength="3" maxlength="7" placeholder="000.000">
+        </div>
+        <div class="form-field md:col-span-3">
+          <label class="form-label">Vergütungswert</label>
+          <span class="text-xl">€ {{ form.value | remuneration }},-</span>
+        </div>
+        <div class="flex justify-center items-center flex-wrap gap-4 md:col-span-full pt-4">
+          <button [disabled]="form.invalid" (click)="submit()" type="button"
+            class="button button-primary">Speichern</button>
+          <button routerLink="/" type="button" class="button">Abbrechen</button>
+        </div>
+      </div>
+    </fieldset>
   </form>
 </div>
