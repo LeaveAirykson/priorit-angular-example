@@ -1,1 +1,41 @@
-<p>booklist works!</p>
+<ng-template #emptyNotice>
+  <div class="italic opacity-50">Es wurden noch keine Bücher erfasst.</div>
+</ng-template>
+
+<ng-container *ngIf="data.length; else emptyNotice">
+  <div class="datatable">
+    <table>
+      <thead class="whitespace-nowrap">
+        <tr>
+          <th>Titel</th>
+          <th>ISBN</th>
+          <th>Jahr</th>
+          <th>Seitenanzahl</th>
+          <th class="text-right">Sprache</th>
+          <th class="text-right">Sachgruppe</th>
+          <th class="text-right">Vergütungswert (€)</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of data">
+          <td>{{ book.title }}</td>
+          <td>{{ book.isbn }}</td>
+          <td>{{ book.year }}</td>
+          <td>{{ book.pagecount }}</td>
+          <td class="text-right">{{ book.language }}</td>
+          <td class="text-right">{{ book.group }}</td>
+          <td class="text-right">{{ book | remuneration }}</td>
+          <td class="text-right">
+            <button (click)="edit(book.id)" type="button" class="button button-icon button-edit" title="bearbeiten">
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+            <button (click)="remove(book.id)" type="button" class="button button-icon button-delete" title="löschen">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
