@@ -1,0 +1,28 @@
+.datatable {
+  overflow: auto;
+  max-width: 100%;
+}
+
+.datatable table {
+  text-align: left;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.datatable th {
+  font-size: .8rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.datatable th,
+.datatable td {
+  padding: .35rem .5rem;
+}
+
+.datatable tr:nth-child(even) {
+  background-color: #e5e5e5;
+}
+
+.datatable tbody tr:hover {
+  background-color: var(--ci-tertiary);
+}

@@ -1,10 +1,36 @@
+/* Wrapper
+ --------------------------------- */
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: .5rem;
-  margin-bottom: 1rem;
+  gap: .25rem;
 }
 
+.form-fieldset {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+}
+
+.form-legend {
+  font-weight: bold;
+  padding: 0 .5em;
+  color: var(--ci-primary);
+}
+
+.form-error {
+  color: #ff3f3f;
+  font-size: .8rem;
+  font-weight: bold;
+  display: block;
+}
+
+.ng-pristine+.form-error {
+  display: none;
+}
+
+/* Form inputs
+ --------------------------------- */
 .form-label {
   font-weight: bold;
   font-size: .9rem;
@@ -17,15 +43,8 @@
   width: 100%;
   padding: .5rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-}
-
-.form-input:focus,
-.form-input:active {
-  outline: 0;
-  border-color: var(--ci-secondary);
-  box-shadow: 0 0 0 1px var(--ci-secondary);
 }
 
 select,
@@ -42,12 +61,34 @@ select.form-input {
   padding-right: 1.8rem;
 }
 
+/* form input states
+ --------------------------------- */
+.form-input:focus,
+.form-input:active {
+  --_border-color: var(--ci-secondary);
 
-button,
+  outline: 0;
+  border-color: var(--_border-color);
+  box-shadow: 0 0 0 1px var(--_border-color);
+}
+
+.form-input.ng-dirty.ng-invalid {
+  --_border-color: red;
+  border-color: var(--_border-color);
+}
+
+/* Button base
+ --------------------------------- */
 .button {
+  --_background-color: #dfdfdf;
+  --_color: var(--fg-color);
+  --_hover-background-color: #d3d3d3;
+  --_hover-color: var(--fg-color);
+
   appearance: none;
-  background-color: var(--ci-primary);
-  color: #fff;
+  display: inline-block;
+  background-color: var(--_background-color);
+  color: var(--_color);
   padding: .5rem 1rem;
   line-height: 1.2;
   outline: 0;
@@ -57,11 +98,57 @@ button,
   cursor: pointer;
 }
 
-button:hover,
+.button-group {
+  display: inline-flex;
+  gap: .3rem;
+}
+
+/* Button states
+ --------------------------------- */
+
 .button:hover,
-button:active,
 .button:active,
-button:focus,
 .button:focus {
-  background-color: var(--ci-secondary);
+  background-color: var(--_hover-background-color);
+  color: var(--_hover-color);
+}
+
+.button[disabled] {
+  opacity: .5;
+  pointer-events: none;
+}
+
+
+/* Button variants
+ --------------------------------- */
+.button-primary {
+  --_background-color: var(--ci-primary);
+  --_color: #fff;
+  --_hover-background-color: var(--ci-secondary);
+  --_hover-color: #fff;
+}
+
+.button-icon {
+  --_background-color: transparent;
+  padding: .3rem .4rem;
+  line-height: 1;
+}
+
+.button-small {
+  padding: .4rem 1rem;
+  font-size: .8rem;
+}
+
+.button-delete {
+  --_color: var(--fg-color);
+  --_background-color: transparent;
+  --_hover-background-color: transparent;
+  --_hover-color: #ff0000;
+}
+
+.button-edit {
+  --_color: var(--fg-color);
+  --_background-color: transparent;
+  --_hover-background-color: transparent;
+  --_hover-color: var(--ci-secondary);
 }

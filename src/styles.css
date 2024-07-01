@@ -1,7 +1,10 @@
 @import "css/vars.css";
 @import "css/reset.css";
+@import "../node_modules/tailwindcss/base.css";
 @import "css/base.css";
-@import "css/grid.css";
+@import "../node_modules/tailwindcss/components.css";
+@import "css/icons.css";
 @import "css/container.css";
 @import "css/form.css";
-@import "css/utilitiy.css";
+@import "css/datatable.css";
+@import "../node_modules/tailwindcss/utilities.css";

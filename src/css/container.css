@@ -3,12 +3,3 @@
   margin-left: auto;
   margin-right: auto;
 }
-
-.gutter {
-  padding: var(--gutter);
-}
-
-.gutter-x {
-  padding-left: var(--gutter);
-  padding-right: var(--gutter);
-}
