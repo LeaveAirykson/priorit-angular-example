@@ -59,4 +59,8 @@ export class BookhomeComponent implements OnInit {
       this.router.navigate(['/add']);
     }
   }
+
+  exampleOptions(opt: { key: string; val: any }) {
+    console.log(opt);
+  }
 }

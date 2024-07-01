@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { BookhomeComponent } from './bookhome/bookhome.component';
 import { RemunerationPipe } from './pipes/remuneration.pipe';
+import { ExampleoptionsComponent } from './exampleoptions/exampleoptions.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { RemunerationPipe } from './pipes/remuneration.pipe';
     BookformComponent,
     BookhomeComponent,
     RemunerationPipe,
+    ExampleoptionsComponent,
   ],
   imports: [
     BrowserModule,
