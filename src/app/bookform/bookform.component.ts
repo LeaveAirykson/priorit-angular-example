@@ -34,6 +34,17 @@ export class BookformComponent {
       });
   }
 
+  @Input() set validateIsbnChecksum(validate: boolean) {
+    if (validate) {
+      this.form.controls['isbn'].addValidators(isbnChecksumValidator);
+    } else {
+      this.form.controls['isbn'].removeValidators(isbnChecksumValidator);
+    }
+
+    this.form.controls['isbn'].updateValueAndValidity();
+    this.form.updateValueAndValidity();
+  }
+
   control(id: string) {
     return this.form.controls[id] as FormControl;
   }
@@ -47,7 +58,7 @@ export class BookformComponent {
       id: [null],
       title: ['', [Validators.required]],
       isbn: ['',
-        [Validators.required, isbnFormatValidator(), isbnChecksumValidator()],
+        [Validators.required, isbnFormatValidator, isbnChecksumValidator],
         [isbnUsedAsyncValidator(this.storage)]
       ],
       year: ['', [Validators.pattern(patterns.year)]],

@@ -7,7 +7,8 @@
   <div class="flex gap-4 flex-col">
     <div>
       <label class="cursor-pointer flex gap-2">
-        <input type="checkbox" class="form-input" (change)="toggleIsbnChecksum($event)"><span>ISBN Prüfziffer
+        <input type="checkbox" class="form-input" [checked]="isbnChecksumActive"
+          (change)="toggleIsbnChecksum($event)"><span>ISBN Prüfziffer
           validieren</span>
       </label>
     </div>

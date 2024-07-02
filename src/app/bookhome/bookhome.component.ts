@@ -11,6 +11,7 @@ export class BookhomeComponent implements OnInit {
   data: Book[] = [];
   id!: string;
   formVisible = false;
+  validateIsbnChecksum = true;
 
   constructor(
     private storage: StorageService,
@@ -61,6 +62,8 @@ export class BookhomeComponent implements OnInit {
   }
 
   exampleOptions(opt: { key: string; val: any }) {
-    console.log(opt);
+    if (opt.key == 'validateIsbnChecksum') {
+      this.validateIsbnChecksum = opt.val;
+    }
   }
 }

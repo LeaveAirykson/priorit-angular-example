@@ -17,24 +17,20 @@ export function isbnUsedAsyncValidator(storage: StorageService): AsyncValidatorF
   }
 }
 
-export function isbnFormatValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    if (!control.value) {
-      return null;
-    }
+export function isbnFormatValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) {
+    return null;
+  }
 
-    const value = stripDelimiter(control.value);
-    const rege = /^([0-9]{9}[0-9X]{1}|[0-9]{13})$/gm;
-    return rege.test(value) ? null : { isbnInvalidFormat: true };
-  };
-}
+  const value = stripDelimiter(control.value);
+  const rege = /^([0-9]{9}[0-9X]{1}|[0-9]{13})$/gm;
+  return rege.test(value) ? null : { isbnInvalidFormat: true };
+};
 
-export function isbnChecksumValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    if (!control.value) {
-      return null;
-    }
+export function isbnChecksumValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) {
+    return null;
+  }
 
-    return isValidIsbn(control.value) ? null : { isbnChecksum: true };
-  };
-}
+  return isValidIsbn(control.value) ? null : { isbnChecksum: true };
+};

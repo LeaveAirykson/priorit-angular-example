@@ -28,3 +28,15 @@ aside.is-open {
 aside.is-open .aside-control span {
   transform: scale(-1);
 }
+
+
+@media all and (min-width: 1920px) {
+  aside {
+    position: absolute;
+    transform: translateX(0);
+  }
+
+  .aside-control {
+    display: none;
+  }
+}
