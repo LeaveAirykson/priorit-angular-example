@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { StorageService } from 'src/app/services/storage.service';
 import { isbnChecksumValidator, isbnFormatValidator, isbnUsedAsyncValidator } from '../utilities/book.validator';
 import { patterns } from './validationpatterns';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-bookform',
@@ -52,7 +53,8 @@ export class BookformComponent {
   constructor(
     private fb: FormBuilder,
     private storage: StorageService,
-    private router: Router) {
+    private router: Router,
+    private notification: NotificationService) {
 
     this.form = this.fb.group({
       id: [null],
@@ -81,14 +83,14 @@ export class BookformComponent {
     if (this.editmode) {
       this.storage.update(this.form.value['id'], this.form.value)
         .subscribe((response) => {
-          console.log(response.message);
+          this.notification.success(response.message);
           this.router.navigate(['/add']);
         });
     } else {
       this.storage.create(this.form.value)
         .subscribe((response) => {
           this.form.reset();
-          console.log(response.message);
+          this.notification.success(response.message);
         })
     }
   }
