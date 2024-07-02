@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { BookhomeComponent } from './bookhome/bookhome.component';
 import { RemunerationPipe } from './pipes/remuneration.pipe';
 import { ExampleoptionsComponent } from './exampleoptions/exampleoptions.component';
+import { NotificationareaComponent } from './notificationarea/notificationarea.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ExampleoptionsComponent } from './exampleoptions/exampleoptions.compone
     BookhomeComponent,
     RemunerationPipe,
     ExampleoptionsComponent,
+    NotificationareaComponent,
   ],
   imports: [
     BrowserModule,

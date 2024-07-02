@@ -1,0 +1,7 @@
+<div id="notifications">
+  <div *ngFor="let note of notifications" class="notification notification-{{note.type}}">
+    <button (click)="remove(note.id)" class="close-control"><span
+        class="material-symbols-outlined">close</span></button>
+    {{ note.message }}
+  </div>
+</div>
