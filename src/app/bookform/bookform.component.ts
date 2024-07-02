@@ -53,7 +53,7 @@ export class BookformComponent {
       year: ['', [Validators.pattern(patterns.year)]],
       pagecount: ['', [Validators.pattern(patterns.pagecount)]],
       language: ['Deutsch', { nonNullable: true }],
-      group: ['', [Validators.pattern(patterns.ddc)]],
+      ddc: ['', [Validators.pattern(patterns.ddc)]],
     });
   }
 

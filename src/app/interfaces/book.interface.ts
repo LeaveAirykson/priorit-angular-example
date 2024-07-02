@@ -5,5 +5,5 @@ export interface Book {
   year: number;
   pagecount: number;
   language: string;
-  group: string;
+  ddc: string;
 }
