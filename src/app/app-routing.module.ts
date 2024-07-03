@@ -6,15 +6,6 @@ const routes: Routes = [
   {
     path: '',
     component: BookhomeComponent
-  },
-  {
-    path: 'add',
-    component: BookhomeComponent,
-    data: { showForm: true }
-  },
-  {
-    path: 'edit/:id',
-    component: BookhomeComponent
   }
 ];
 
