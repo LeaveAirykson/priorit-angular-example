@@ -9,6 +9,7 @@ import { BookhomeComponent } from './bookhome/bookhome.component';
 import { RemunerationPipe } from './pipes/remuneration.pipe';
 import { ExampleoptionsComponent } from './exampleoptions/exampleoptions.component';
 import { NotificationareaComponent } from './notificationarea/notificationarea.component';
+import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { NotificationareaComponent } from './notificationarea/notificationarea.c
     RemunerationPipe,
     ExampleoptionsComponent,
     NotificationareaComponent,
+    ModalComponent,
   ],
   imports: [
     BrowserModule,
