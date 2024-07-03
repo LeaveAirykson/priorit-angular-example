@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Book } from 'src/app/interfaces/book.interface';
 import { StorageResponse } from 'src/app/interfaces/storageresponse.interface';
-import { stripDelimiter } from '../utilities/book.helper';
+import { matchesSearchRule, stripDelimiter } from '../utilities/book.helper';
+import { SearchRule } from '../interfaces/searchrule.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { stripDelimiter } from '../utilities/book.helper';
 /**
  * Service to retrieve and store books
  */
-export class StorageService {
+export class BookService {
   /** key in localStorage */
   storename = 'bookstorage';
 
@@ -133,6 +134,11 @@ export class StorageService {
   getByProp(prop: keyof Book, val: any): Observable<Book> {
     const result = this.data.find((b) => b[prop] == val);
     return this.response<Book>(result);
+  }
+
+  search(rules: SearchRule[]): Observable<Book[]> {
+    const result = this.data.filter((b) => matchesSearchRule(b, rules));
+    return this.response<Book[]>(result);
   }
 
   /**
