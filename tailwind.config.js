@@ -55,6 +55,9 @@ module.exports = {
       'red-800': '#b01d1d',
     },
     extend: {
+      screens: {
+        '3xl': '1920px',
+      },
       spacing: {
         gutter: '1.5rem',
       },
