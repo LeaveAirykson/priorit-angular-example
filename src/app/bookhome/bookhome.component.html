@@ -1,5 +1,7 @@
-<app-booklist></app-booklist>
-<app-modal *ngIf="formVisible" maxWidth="800px" (closing)="hideForm()">
-  <app-bookform [id]="id" [validateIsbnChecksum]="validateIsbnChecksum"></app-bookform>
-</app-modal>
-<app-exampleoptions (update)="exampleOptions($event)"></app-exampleoptions>
+<div class="mx-auto max-w-screen-3xl">
+  <app-booklist></app-booklist>
+  <app-modal *ngIf="formVisible" maxWidth="800px" (closing)="hideForm()">
+    <app-bookform [id]="id" [validateIsbnChecksum]="validateIsbnChecksum"></app-bookform>
+  </app-modal>
+  <app-exampleoptions (update)="exampleOptions($event)"></app-exampleoptions>
+</div>
