@@ -1,7 +1,40 @@
+<!-- search and display options -->
+<div class="mb-4 flex gap-4 justify-between">
+  <div class="w-full max-w-80">
+    <input #searchfield type="text" class="form-input form-search" placeholder="Suche nach Titel oder ISBN"
+      (keydown.enter)="search($event)">
+  </div>
+  <div class="button-group">
+    <button routerLink="/" [queryParams]="{showForm: true}" class="button button-primary">
+      <span class="material-symbols-outlined">post_add</span>
+      Buch eintragen
+    </button>
+    <button type="button" class="button">
+      <span class="material-symbols-outlined text-blue-600">bar_chart</span>
+      Visualisierung
+    </button>
+    <button type="button" class="button">
+      <span class="material-symbols-outlined text-blue-600">filter_alt</span>
+      Filterung
+    </button>
+  </div>
+</div>
+
+<!-- search result notice -->
+<ng-container *ngIf="searched">
+  <div class="flex justify-center gap-2 items-center flex-wrap mb-4">
+    <span>{{data.length ? data.length : 'Keine' }} Ergebnisse gefunden für: '{{searched}}'</span>
+    <button class="button button-icon" title="zurücksetzen" (click)="resetSearch()"><span
+        class="material-symbols-outlined">close</span></button>
+  </div>
+</ng-container>
+
+<!-- empty notice -->
 <ng-template #emptyNotice>
-  <div class="italic opacity-50">Es wurden noch keine Bücher erfasst.</div>
+  <div class="p-4 text-center italic opacity-50">Es wurden noch keine Bücher erfasst.</div>
 </ng-template>
 
+<!-- book datatable -->
 <ng-container *ngIf="data.length; else emptyNotice">
   <div class="datatable">
     <table>
@@ -26,7 +59,7 @@
           <td class="text-right">{{ book.language }}</td>
           <td class="text-right">{{ book.ddc }}</td>
           <td class="text-right">{{ book | remuneration }}</td>
-          <td class="text-right">
+          <td class="text-right whitespace-nowrap">
             <button (click)="edit(book.id)" type="button" class="button button-icon button-edit" title="bearbeiten">
               <span class="material-symbols-outlined">edit</span>
             </button>

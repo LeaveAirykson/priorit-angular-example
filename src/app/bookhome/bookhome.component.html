@@ -1,10 +1,5 @@
-<app-bookform [id]="id" *ngIf="formVisible" [validateIsbnChecksum]="validateIsbnChecksum"></app-bookform>
-<div class="flex flex-wrap justify-between items-center mb-4">
-  <h1 class="mb-0">Bücherliste</h1>
-  <div class="button-group">
-    <button routerLink="/add" class="button button-small button-primary" *ngIf="!formVisible">Buch eintragen</button>
-    <button class="button button-small">Visualisierung</button>
-  </div>
-</div>
-<app-booklist [data]="data" (update)="onUpdate()"></app-booklist>
+<app-booklist></app-booklist>
+<app-modal *ngIf="formVisible" maxWidth="800px" (closing)="hideForm()">
+  <app-bookform [id]="id" [validateIsbnChecksum]="validateIsbnChecksum"></app-bookform>
+</app-modal>
 <app-exampleoptions (update)="exampleOptions($event)"></app-exampleoptions>

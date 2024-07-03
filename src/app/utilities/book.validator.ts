@@ -1,9 +1,9 @@
-import { AbstractControl, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { Observable, map, of } from 'rxjs';
-import { StorageService } from '../services/storage.service';
+import { BookService } from '../services/book.service';
 import { isValidIsbn, stripDelimiter } from './book.helper';
 
-export function isbnUsedAsyncValidator(storage: StorageService): AsyncValidatorFn {
+export function isbnUsedAsyncValidator(storage: BookService): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
 
     if (!control.value) {
@@ -12,7 +12,7 @@ export function isbnUsedAsyncValidator(storage: StorageService): AsyncValidatorF
 
     return storage.getByIsbn(control.value)
       .pipe(map((result) => {
-        return !result ? null : result.id === control.root.value['id'] ? null : { isbnUsed: true };
+        return !result ? null : result.id === control.root.get('id')?.value ? null : { isbnUsed: true };
       }));
   }
 }
@@ -29,6 +29,10 @@ export function isbnFormatValidator(control: AbstractControl): ValidationErrors 
 
 export function isbnChecksumValidator(control: AbstractControl): ValidationErrors | null {
   if (!control.value) {
+    return null;
+  }
+
+  if (![10, 13].includes(stripDelimiter(control.value).length)) {
     return null;
   }
 

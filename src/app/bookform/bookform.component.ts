@@ -1,9 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { StorageService } from 'src/app/services/storage.service';
+import { BookService } from 'src/app/services/book.service';
 import { isbnChecksumValidator, isbnFormatValidator, isbnUsedAsyncValidator } from '../utilities/book.validator';
-import { patterns } from './validationpatterns';
 import { NotificationService } from '../services/notification.service';
 
 @Component({
@@ -11,10 +10,31 @@ import { NotificationService } from '../services/notification.service';
   templateUrl: './bookform.component.html',
   styleUrls: ['./bookform.component.css']
 })
-export class BookformComponent {
+
+export class BookformComponent implements AfterViewInit, OnInit, OnDestroy {
   form!: FormGroup;
   editmode = false;
-  patterns = patterns;
+  patterns = {
+    year: '^[0-9]{4}$',
+    pagecount: '^[0-9]{1,}$',
+    ddc: '^[0-9]{3}\.[0-9]{1,5}$|^[0-9]{3}$'
+  };
+
+  errorMessagesDefaults: { [key: string]: string } = {
+    required: 'Dieses Feld ist ein Pflichtfeld',
+    isbnUsed: 'ISBN bereits in Verwendung',
+    isbnInvalidFormat: 'Ungültiges Format oder unerlaubte Zeichen verwendet',
+    isbnChecksum: 'Ungültige ISBN Prüfziffer',
+    pattern: 'Ungültiges Format'
+  }
+
+  errorMessages: { [key: string]: { [key: string]: string } | undefined } = {
+    year: {
+      pattern: 'Ungültige Jahreszahl'
+    }
+  }
+
+  @ViewChild('title') titleEl: ElementRef<HTMLInputElement>;
 
   @Input() set id(id: string) {
     if (!id) {
@@ -26,12 +46,18 @@ export class BookformComponent {
       .subscribe((val) => {
         if (!val) {
           this.editmode = false;
-          this.router.navigate(['/add']);
+          this.router.navigate(['/'], { queryParams: { showForm: true } });
           return;
         }
 
         this.editmode = true;
+        this.form.reset();
         this.form.patchValue(val);
+        this.form.updateValueAndValidity();
+
+        for (let ctrl of Object.keys(this.form.controls)) {
+          this.form.controls[ctrl].markAsDirty();
+        }
       });
   }
 
@@ -46,13 +72,9 @@ export class BookformComponent {
     this.form.updateValueAndValidity();
   }
 
-  control(id: string) {
-    return this.form.controls[id] as FormControl;
-  }
-
   constructor(
     private fb: FormBuilder,
-    private storage: StorageService,
+    private storage: BookService,
     private router: Router,
     private notification: NotificationService) {
 
@@ -60,19 +82,32 @@ export class BookformComponent {
       id: [null],
       title: ['', [Validators.required]],
       isbn: ['',
-        [Validators.required, isbnFormatValidator, isbnChecksumValidator],
+        [Validators.required, Validators.minLength(10), isbnFormatValidator, isbnChecksumValidator],
         [isbnUsedAsyncValidator(this.storage)]
       ],
-      year: ['', [Validators.pattern(patterns.year)]],
-      pagecount: ['', [Validators.pattern(patterns.pagecount)]],
+      year: ['', [Validators.pattern(this.patterns.year)]],
+      pagecount: ['', [Validators.pattern(this.patterns.pagecount)]],
       language: ['Deutsch', { nonNullable: true }],
-      ddc: ['', [Validators.pattern(patterns.ddc)]],
+      ddc: ['', [Validators.pattern(this.patterns.ddc)]],
     });
   }
 
-  showErrors(id: string) {
-    const control = this.form.get(id) as FormControl;
-    return control.invalid && control.dirty && control.errors;
+  ngAfterViewInit(): void {
+    this.titleEl.nativeElement.focus();
+    console.log('form view init');
+
+  }
+
+  ngOnInit(): void {
+    console.log('form init');
+    if (this.titleEl) {
+      this.titleEl.nativeElement.focus();
+    }
+  }
+
+  control(id: string) {
+    console.log('get ' + id);
+    return this.form.controls[id] as FormControl;
   }
 
   submit() {
@@ -84,14 +119,20 @@ export class BookformComponent {
       this.storage.update(this.form.value['id'], this.form.value)
         .subscribe((response) => {
           this.notification.success(response.message);
-          this.router.navigate(['/add']);
+          this.router.navigate(['/']);
         });
     } else {
       this.storage.create(this.form.value)
         .subscribe((response) => {
           this.form.reset();
           this.notification.success(response.message);
+          this.titleEl?.nativeElement?.focus();
         })
     }
   }
+
+  ngOnDestroy(): void {
+    console.log('form destroy');
+  }
+
 }

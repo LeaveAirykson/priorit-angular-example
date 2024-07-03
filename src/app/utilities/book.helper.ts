@@ -1,4 +1,5 @@
 import { Book } from '../interfaces/book.interface';
+import { SearchRule } from '../interfaces/searchrule.interface';
 
 export function calculateRemuneration(data: Book): number {
   let result = 100;
@@ -48,6 +49,69 @@ export function calculateRemuneration(data: Book): number {
 
 export function stripDelimiter(val: string): string {
   return val ? String(val).trim().replace(/\s|-/gm, '') : val;
+}
+
+export function matchesSearchRule(book: Book, rules: SearchRule[], or = false): boolean {
+  let matches = false;
+
+  for (const rule of rules) {
+    // recursive matches rules in 'or' mode
+    if ('or' in rule) {
+      matches = matchesSearchRule(book, rule.or, true);
+    }
+    // otherwise match based on operator
+    else {
+      switch (rule.operator) {
+        case 'gt':
+          matches = book[rule.property] > rule.value;
+          break;
+
+        case 'gte':
+          matches = book[rule.property] >= rule.value;
+          break;
+
+        case 'lte':
+          matches = book[rule.property] <= rule.value;
+          break;
+
+        case 'lt':
+          matches = book[rule.property] < rule.value;
+          break;
+
+        case 'not':
+          matches = book[rule.property] !== rule.value;
+          break;
+
+        case 'regex':
+          let flags = rule.flags ?? 'gmi';
+          let teststr = String(book[rule.property]);
+
+          // make sure to strip optional isbn delimiters
+          // from book value and input value as well
+          if (rule.property === 'isbn') {
+            rule.value = stripDelimiter(rule.value);
+            teststr = stripDelimiter(teststr);
+          }
+
+          matches = (new RegExp(rule.value, flags)).test(teststr);
+          break;
+
+        default:
+          matches = book[rule.property] == rule.value;
+          break;
+      }
+    }
+
+    if (!or && !matches) {
+      return false;
+    }
+
+    if (or && matches) {
+      return true;
+    }
+  }
+
+  return matches;
 }
 
 export function isValidIsbn(isbn: string): boolean {
