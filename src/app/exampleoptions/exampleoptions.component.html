@@ -1,19 +1,13 @@
-<aside [class.is-open]="isOpen">
-  <button (click)="toggle()" class="button button-primary button-icon aside-control"><span
-      class="material-symbols-outlined">chevron_right</span></button>
-
-
-  <h2>Optionen</h2>
+<aside>
   <div class="flex gap-4 flex-col">
-    <div>
-      <label class="cursor-pointer flex gap-2">
-        <input type="checkbox" class="form-input" [checked]="isbnChecksumActive"
-          (change)="toggleIsbnChecksum($event)"><span>ISBN Prüfziffer
-          validieren</span>
-      </label>
-    </div>
-    <div>
-      <button class="button button-small" (click)="createDummyData()">Testdaten erstellen</button>
-    </div>
+    <label class="cursor-pointer flex gap-2">
+      <input type="checkbox" class="form-input" [checked]="isbnChecksumActive"
+        (change)="toggleIsbnChecksum($event)"><span>ISBN Prüfziffer
+        validieren</span>
+    </label>
+  </div>
+  <div>
+    <button class="button button-small" (click)="createDummyData()">Testdaten erstellen</button>
   </div>
 </aside>
+<div class="h-20"></div>
