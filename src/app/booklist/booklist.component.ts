@@ -18,6 +18,7 @@ export class BooklistComponent implements OnInit {
   searched: string | null = null;
   @ViewChild('searchfield') searchfield: ElementRef<HTMLInputElement>;
   form: FormGroup;
+  markedForRemoval: Book | null = null;
 
   constructor(
     private router: Router,
@@ -60,11 +61,18 @@ export class BooklistComponent implements OnInit {
    * @return {void}
    */
   remove(id: string) {
+
+    if (!this.markedForRemoval) {
+      this.markedForRemoval = this.data.find((b) => b.id == id) ?? null;
+      return;
+    }
+
     this.storage.removeById(id)
       .subscribe((response) => {
         if (response.success) {
           this.notification.success(response.message);
           this.data = this.data.filter((b) => b.id != id);
+          this.markedForRemoval = null;
         } else {
           this.notification.error(response.message);
         }

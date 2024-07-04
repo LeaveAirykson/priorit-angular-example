@@ -72,3 +72,12 @@
     </table>
   </div>
 </ng-container>
+
+<!-- deletion modal -->
+<app-modal *ngIf="markedForRemoval" (closing)="markedForRemoval=null">
+  <div class="text-center mb-2">Titel <strong>"{{markedForRemoval.title}}"</strong> wirklich löschen?</div>
+  <div class="button-group w-full items-center justify-center">
+    <button (click)="remove(markedForRemoval.id)" class="button button-primary">Löschen</button>
+    <button (click)="markedForRemoval=null" class="button">Abbrechen</button>
+  </div>
+</app-modal>
