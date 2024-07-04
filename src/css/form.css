@@ -12,6 +12,17 @@
   font-weight: bold;
 }
 
+.form-fieldset {
+  border: 1px solid var(--border-color);
+  padding: .5rem 1rem 1rem;
+  border-radius: var(--border-radius);
+}
+
+.form-fieldset .form-legend {
+  padding: 0 .5rem;
+  margin-bottom: 0;
+}
+
 .form-error,
 .form-errors {
   color: #ff3f3f;
