@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BookformComponent } from './bookform.component';
+import { RemunerationPipe } from '../pipes/remuneration.pipe';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('BookformComponent', () => {
   let component: BookformComponent;
@@ -8,9 +10,10 @@ describe('BookformComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BookformComponent ]
+      declarations: [BookformComponent, RemunerationPipe],
+      imports: [ReactiveFormsModule]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(BookformComponent);
     component = fixture.componentInstance;
