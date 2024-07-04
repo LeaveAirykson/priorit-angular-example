@@ -1,0 +1,9 @@
+.flag {
+  display: inline-block;
+  padding: .2rem .5rem;
+  font-size: .8rem;
+  background-color: var(--orange-080);
+  color: var(--orange-900);
+  border-radius: var(--border-radius);
+  cursor: default;
+}

@@ -7,4 +7,5 @@
 @import "css/container.css";
 @import "css/form.css";
 @import "css/datatable.css";
+@import "css/flags.css";
 @import "../node_modules/tailwindcss/utilities.css";
