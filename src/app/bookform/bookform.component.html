@@ -8,8 +8,11 @@
         <ng-template *ngTemplateOutlet="formerrors;context:{control:'title'}"></ng-template>
       </div>
       <div class="form-field md:col-span-6">
-        <label for="isbn" class="form-label"><strong>ISBN*</strong><span class="cursor-help"
-            title="ISBN 10 und ISBN 13 Formate zulässig" class="material-symbols-outlined">help</span></label>
+        <label for="isbn" class="form-label">
+          <span title="ISBN-10 und ISBN-13 zulässig"
+            class="cursor-help material-symbols-outlined text-blue-300">help</span>
+          <strong>ISBN*</strong>
+        </label>
         <input required class="form-input" type="text" formControlName="isbn" id="isbn" placeholder="000-0-000-00000-0">
         <ng-template *ngTemplateOutlet="formerrors;context:{control:'isbn'}"></ng-template>
       </div>
