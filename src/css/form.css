@@ -184,6 +184,7 @@ select,
 .button-icon {
   padding: 0.3rem 0.4rem;
   line-height: 1;
+  font-weight: normal;
 }
 
 .button-small {
