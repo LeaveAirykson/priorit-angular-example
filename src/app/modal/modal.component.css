@@ -20,6 +20,7 @@
   position: relative;
   display: flex;
   box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.1);
+  min-width: 300px;
 }
 
 .modal-content {
