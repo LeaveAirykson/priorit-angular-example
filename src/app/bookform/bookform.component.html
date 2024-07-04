@@ -1,62 +1,60 @@
 <form [formGroup]="form">
-  <fieldset class=" form-fieldset">
-    <legend class="form-legend">Buch {{ editmode ? 'bearbeiten' : 'eintragen' }}</legend>
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-      <div class="form-field md:col-span-6">
-        <label for="title" class="form-label"><strong>Titel*</strong></label>
-        <input autofocus #title required class="form-input" type="text" formControlName="title" id="title">
-        <ng-template *ngTemplateOutlet="formerrors;context:{control:'title'}"></ng-template>
-      </div>
-      <div class="form-field md:col-span-6">
-        <label for="isbn" class="form-label">
-          <span title="ISBN-10 und ISBN-13 zulässig"
-            class="cursor-help material-symbols-outlined text-blue-300">help</span>
-          <strong>ISBN*</strong>
-        </label>
-        <input required class="form-input" type="text" formControlName="isbn" id="isbn" placeholder="000-0-000-00000-0">
-        <ng-template *ngTemplateOutlet="formerrors;context:{control:'isbn'}"></ng-template>
-      </div>
-      <div class="md:col-span-6 flex flex-col gap-4 md:flex-row">
-        <div class="form-field md:w-16">
-          <label for="year" class="form-label">Jahr</label>
-          <input class="form-input" type="text" formControlName="year" id="year" placeholder="JJJJ">
-          <ng-template *ngTemplateOutlet="formerrors;context:{control:'year'}"></ng-template>
-        </div>
-        <div class="form-field md:w-24">
-          <label for="pagecount" class="form-label">Seitenanzahl</label>
-          <input class="form-input" type="text" formControlName="pagecount" id="pagecount" placeholder="0">
-          <ng-template *ngTemplateOutlet="formerrors;context:{control:'pagecount'}"></ng-template>
-        </div>
-        <div class="form-field">
-          <label for="language" class="form-label">Sprache</label>
-          <select id="language" class="form-input" formControlName="language">
-            <option value="Deutsch">Deutsch</option>
-            <option value="Englisch">Englisch</option>
-            <option value="Französisch">Französisch</option>
-            <option value="Niederländisch">Niederländisch</option>
-          </select>
-        </div>
-      </div>
-      <div class="md:col-span-6 md:flex md:gap-4">
-        <div class="form-field md:col-span-3">
-          <label for="ddc" class="form-label">Sachgruppe</label>
-          <input class="form-input w-32" pattern="{{patterns.ddc}}" type="text" formControlName="ddc" id="ddc"
-            placeholder="000.000">
-          <ng-template *ngTemplateOutlet="formerrors;context:{control:'ddc'}"></ng-template>
-        </div>
-        <div class="form-field md:col-span-3">
-          <label class="form-label">Vergütungswert</label>
-          <span class="text-xl pt-1">€ {{ form.value | remuneration }},-</span>
-        </div>
-      </div>
-      <div class="flex justify-center items-center flex-wrap gap-4 md:col-span-full">
-        <button [disabled]="form.invalid" (click)="submit()" type="button"
-          class="button button-primary">Speichern</button>
-        <button routerLink="/" type="button" class="button">Abbrechen</button>
-      </div>
-      <div class="col-span-full italic text-xs text-center opacity-50">*Pflichtfeld</div>
+  <legend class="form-legend">Buch {{ editmode ? 'bearbeiten' : 'eintragen' }}</legend>
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+    <div class="form-field md:col-span-6">
+      <label for="title" class="form-label"><strong>Titel*</strong></label>
+      <input #title required class="form-input" type="text" formControlName="title" id="title">
+      <ng-template *ngTemplateOutlet="formerrors;context:{control:'title'}"></ng-template>
     </div>
-  </fieldset>
+    <div class="form-field md:col-span-6">
+      <label for="isbn" class="form-label">
+        <span title="ISBN-10 und ISBN-13 zulässig"
+          class="cursor-help material-symbols-outlined text-blue-300">help</span>
+        <strong>ISBN*</strong>
+      </label>
+      <input required class="form-input" type="text" formControlName="isbn" id="isbn" placeholder="000-0-000-00000-0">
+      <ng-template *ngTemplateOutlet="formerrors;context:{control:'isbn'}"></ng-template>
+    </div>
+    <div class="md:col-span-6 flex flex-col gap-4 md:flex-row">
+      <div class="form-field md:w-16">
+        <label for="year" class="form-label">Jahr</label>
+        <input class="form-input" type="text" formControlName="year" id="year" placeholder="JJJJ">
+        <ng-template *ngTemplateOutlet="formerrors;context:{control:'year'}"></ng-template>
+      </div>
+      <div class="form-field md:w-24">
+        <label for="pagecount" class="form-label">Seitenanzahl</label>
+        <input class="form-input" type="text" formControlName="pagecount" id="pagecount" placeholder="0">
+        <ng-template *ngTemplateOutlet="formerrors;context:{control:'pagecount'}"></ng-template>
+      </div>
+      <div class="form-field">
+        <label for="language" class="form-label">Sprache</label>
+        <select id="language" class="form-input" formControlName="language">
+          <option value="Deutsch">Deutsch</option>
+          <option value="Englisch">Englisch</option>
+          <option value="Französisch">Französisch</option>
+          <option value="Niederländisch">Niederländisch</option>
+        </select>
+      </div>
+    </div>
+    <div class="md:col-span-6 md:flex md:gap-4">
+      <div class="form-field md:col-span-3">
+        <label for="ddc" class="form-label">Sachgruppe</label>
+        <input class="form-input w-32" pattern="{{patterns.ddc}}" type="text" formControlName="ddc" id="ddc"
+          placeholder="000.000">
+        <ng-template *ngTemplateOutlet="formerrors;context:{control:'ddc'}"></ng-template>
+      </div>
+      <div class="form-field md:col-span-3">
+        <label class="form-label">Vergütungswert</label>
+        <span class="text-xl pt-1">€ {{ form.value | remuneration }},-</span>
+      </div>
+    </div>
+    <div class="flex justify-center items-center flex-wrap gap-4 md:col-span-full">
+      <button [disabled]="form.invalid" (click)="submit()" type="button"
+        class="button button-primary">Speichern</button>
+      <button routerLink="/" type="button" class="button">Abbrechen</button>
+    </div>
+    <div class="col-span-full italic text-xs text-center opacity-50">*Pflichtfeld</div>
+  </div>
 </form>
 <!-- Error messages template -->
 <ng-template #formerrors let-control="control">
