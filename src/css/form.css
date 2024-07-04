@@ -56,6 +56,10 @@
   background-color: #fff;
 }
 
+.form-input-small {
+  font-size: .8rem;
+}
+
 select,
 [type='checkbox'],
 [type='radio'] {
