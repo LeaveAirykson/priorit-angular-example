@@ -8,7 +8,6 @@ import { NotificationService } from '../services/notification.service';
 @Component({
   selector: 'app-bookform',
   templateUrl: './bookform.component.html',
-  styleUrls: ['./bookform.component.css']
 })
 
 export class BookformComponent implements AfterViewInit, OnInit, OnDestroy {
