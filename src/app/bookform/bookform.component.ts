@@ -1,10 +1,10 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { BookService } from '../services/book.service';
 import { NotificationService } from '../services/notification.service';
-import { isbnChecksumValidator, isbnFormatValidator, isbnUsedAsyncValidator } from '../utilities/book.validator';
+import { isbnChecksumValidator, isbnFormatValidator, isbnUsedAsyncValidator, validationPatterns } from '../utilities/book.validator';
 
 /**
  * This component displays the edit/add form for books.
@@ -14,7 +14,7 @@ import { isbnChecksumValidator, isbnFormatValidator, isbnUsedAsyncValidator } fr
   templateUrl: './bookform.component.html',
 })
 
-export class BookformComponent implements OnInit, OnDestroy {
+export class BookformComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('title') titleInput: ElementRef<HTMLInputElement>;
   @Input() set id(id: string) { this.loadBookById(id); }
   @Input() set validateIsbnChecksum(validate: boolean) { this.toggleIsbnChecksumValidator(validate); }
@@ -25,11 +25,7 @@ export class BookformComponent implements OnInit, OnDestroy {
   /**
    * Regex patterns for validation
    */
-  patterns = {
-    year: '^[0-9]{4}$',
-    pagecount: '^[0-9]{1,}$',
-    ddc: '^[0-9]{3}\.[0-9]{1,5}$|^[0-9]{3}$'
-  };
+  patterns = validationPatterns;
 
   /**
    * Default messages for validation errors based on error key.
@@ -73,6 +69,10 @@ export class BookformComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.focusTitleInput();
+  }
+
+  ngAfterViewInit(): void {
     this.focusTitleInput();
   }
 
