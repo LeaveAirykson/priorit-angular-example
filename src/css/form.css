@@ -84,12 +84,23 @@ select,
   background-repeat: no-repeat;
 }
 
-.form-input:is(select) {
+.form-input:is(select):not([multiple]) {
   background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiIHdpZHRoPSIyNHB4IiBmaWxsPSIjNDc4OWEzIj4KICA8cGF0aCBkPSJNNDgwLTM0NCAyNDAtNTg0bDU2LTU2IDE4NCAxODQgMTg0LTE4NCA1NiA1Ni0yNDAgMjQwWiIvPgo8L3N2Zz4=');
   background-size: 24px;
   background-repeat: no-repeat;
   background-position: right 0.2rem center;
   padding-right: 1.8rem;
+}
+
+.form-input:is(select) :checked,
+.form-input:is(select) :active,
+.form-input:is(select) :focus {
+  background-color: var(--blue-070);
+}
+
+.form-input:is([multiple]) option {
+  padding-top: .2rem;
+  padding-bottom: .2rem;
 }
 
 .form-search {
