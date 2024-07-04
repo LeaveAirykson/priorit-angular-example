@@ -13,10 +13,6 @@
       <span class="material-symbols-outlined text-blue-600">bar_chart</span>
       Visualisierung
     </button>
-    <button type="button" class="button">
-      <span class="material-symbols-outlined text-blue-600">filter_alt</span>
-      Filterung
-    </button>
   </div>
 </div>
 
@@ -36,6 +32,19 @@
 
 <!-- book datatable -->
 <ng-container *ngIf="data.length; else emptyNotice">
+  <div class="filter-form mb-8">
+    <fieldset class="form-fieldset">
+      <legend class="form-legend">Filter</legend>
+      <div class="flex gap-2 flex-wrap">
+        <span class="flag">Jahre: <strong>Alle</strong></span>
+        <span class="flag">Seitenanzahl: <strong>Alle</strong></span>
+        <span class="flag">Sprachen: <strong>Alle</strong></span>
+        <span class="flag">Sachgruppen: <strong>Alle</strong></span>
+        <span class="flag">Vergütungswerte: <strong>Alle</strong></span>
+        <button class="button button-small" (click)="showFilterModal()">Bearbeiten</button>
+      </div>
+    </fieldset>
+  </div>
   <div class="datatable">
     <table>
       <thead class="whitespace-nowrap">
@@ -73,11 +82,16 @@
   </div>
 </ng-container>
 
+<!-- filter modal -->
+<app-modal *ngIf="filterModalVisible" (closing)="showFilterModal(false)" maxWidth="400px">
+  <app-bookfilterform (update)="runFilter($event)" (cancel)="showFilterModal(false)"></app-bookfilterform>
+</app-modal>
+
 <!-- deletion modal -->
-<app-modal *ngIf="markedForRemoval" (closing)="markedForRemoval=null">
+<app-modal *ngIf="markedForRemoval" (closing)="markForRemoval()">
   <div class="text-center mb-2">Titel <strong>"{{markedForRemoval.title}}"</strong> wirklich löschen?</div>
   <div class="button-group w-full items-center justify-center">
     <button (click)="remove(markedForRemoval.id)" class="button button-primary">Löschen</button>
-    <button (click)="markedForRemoval=null" class="button">Abbrechen</button>
+    <button (click)="markForRemoval()" class="button">Abbrechen</button>
   </div>
 </app-modal>

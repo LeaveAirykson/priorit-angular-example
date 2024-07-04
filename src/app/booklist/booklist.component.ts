@@ -1,9 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Book } from '../interfaces/book.interface';
 import { BookService } from '../services/book.service';
 import { NotificationService } from '../services/notification.service';
+import { filter2Rule } from '../utilities/book.helper';
+import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
 
 /**
  * This component lists all books found in storage.
@@ -17,8 +18,9 @@ export class BooklistComponent implements OnInit {
   data: Book[] = [];
   searched: string | null = null;
   @ViewChild('searchfield') searchfield: ElementRef<HTMLInputElement>;
-  form: FormGroup;
   markedForRemoval: Book | null = null;
+  filterModalVisible = true;
+  activeFilter: Array<SearchRule | SearchOrRule> = [];
 
   constructor(
     private router: Router,
@@ -123,5 +125,52 @@ export class BooklistComponent implements OnInit {
     this.searchfield.nativeElement.value = '';
     this.searched = null;
     this.loadBooks();
+  }
+
+  /**
+   * Marks a book for removal
+   *
+   * @param  {Book} book
+   *
+   * @return {void}
+   */
+  markForRemoval(book: Book | null = null) {
+    this.markedForRemoval = book;
+  }
+
+  /**
+   * Shows/hides filter modal
+   *
+   * @param  {boolean} [show=true]
+   *
+   * @return {void}
+   */
+  showFilterModal(show = true) {
+    this.filterModalVisible = show;
+  }
+
+  /**
+   * Consumes set filter and reloads data
+   *
+   * @param  {object} data
+   *
+   * @return {void}
+   */
+  runFilter(data: { [key: string]: any }) {
+    this.showFilterModal(false);
+    console.log(data);
+
+    this.activeFilter = filter2Rule(data);
+
+    console.log(this.activeFilter);
+
+    // if (this.activeFilter.length) {
+    //   this.storage.search(this.activeFilter)
+    //     .subscribe((result) => {
+    //       console.log(result);
+    //     });
+    // } else {
+    //   this.loadBooks();
+    // }
   }
 }
