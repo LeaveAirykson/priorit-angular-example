@@ -132,6 +132,14 @@ export class BookService {
     return this.response<Book>(result);
   }
 
+  /**
+   * Flexible search logic based on defined search rules
+   * which support and/or logic.
+   *
+   * @param  {SearchRule[]<Book>[]} rules
+   *
+   * @return {Observable<Book>[]}
+   */
   search(rules: SearchRule[]): Observable<Book[]> {
     const result = this.data.filter((b) => matchesSearchRule(b, rules));
     return this.response<Book[]>(result);
