@@ -1,8 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Book } from 'src/app/interfaces/book.interface';
-import { BookService } from 'src/app/services/book.service';
+import { Book } from '../interfaces/book.interface';
+import { BookService } from '../services/book.service';
 import { NotificationService } from '../services/notification.service';
 
 @Component({

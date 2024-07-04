@@ -4,7 +4,6 @@ import { BookhomeComponent } from './bookhome.component';
 import { BooklistComponent } from '../booklist/booklist.component';
 import { ExampleoptionsComponent } from '../exampleoptions/exampleoptions.component';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from '../app-routing.module';
 
 describe('BookhomeComponent', () => {
