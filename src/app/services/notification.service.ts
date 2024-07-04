@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { NotificationType, Notification, NotificationOptions } from '../interfaces/notification.interface';
 
+/**
+ * Service to handle notifications
+ */
 @Injectable({
   providedIn: 'root'
 })

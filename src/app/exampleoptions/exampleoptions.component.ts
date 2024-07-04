@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
+/**
+ * This component is not a practical use case, its just here
+ * to ease the testing of the example application.
+ */
 @Component({
   selector: 'app-exampleoptions',
   templateUrl: './exampleoptions.component.html',

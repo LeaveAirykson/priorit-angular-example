@@ -1,11 +1,18 @@
 import { Book } from '../interfaces/book.interface';
 import { SearchRule } from '../interfaces/searchrule.interface';
 
-export function calculateRemuneration(data: Book): number {
+/**
+ * Calculates remuneration value for a given book
+ *
+ * @param  {Book}   book
+ *
+ * @return {number}
+ */
+export function calculateRemuneration(book: Book): number {
   let result = 100;
   let additions = 0;
-  let factor = 1;
 
+  /** Multiplication factor based on page count */
   const factorRanges = [
     { from: 1, to: 49, factor: 0.7 },
     { from: 50, to: 99, factor: 1 },
@@ -15,42 +22,51 @@ export function calculateRemuneration(data: Book): number {
     { from: 500, factor: 1.5 }
   ];
 
-  const yearAdditions = [
-    (year: number) => year < 1990 ? 15 : 0,
-  ];
+  /**
+   * Methods to calculate additional remuneration
+   */
+  const additionsFn = {
+    year: (year: number) => year > 0 && year < 1990 ? 15 : 0,
+    language: (lang: string, base: number) => lang && lang.toLowerCase() == 'deutsch' ? 10 * base / 100 : 0
+  };
 
-  const langAdditions = [
-    (lang: string, base: number) => lang.toLowerCase() == 'deutsch' ? 10 * base / 100 : 0
-  ];
-
+  // multiply by page related factor
   for (const range of factorRanges) {
-    if (data.pagecount >= range.from && (!range.to || data.pagecount <= range.to)) {
-      factor = range.factor;
+    if (book.pagecount >= range.from && (!range.to || book.pagecount <= range.to)) {
+      result *= range.factor;
       break;
     }
   }
 
-  result *= factor;
-
-  if (data.year) {
-    for (const fn of yearAdditions) {
-      additions += fn(data.year);
-    }
-  }
-
-  if (data.language) {
-    for (const fn of langAdditions) {
-      additions += fn(data.language, result);
-    }
-  }
+  // add calculated additions
+  additions += additionsFn.year(book.year);
+  additions += additionsFn.language(book.language, result);
 
   return Number((result + additions).toFixed(2));
 }
 
+/**
+ * Strips optional delimiters (whitespace, hyphen) from isbn numbers.
+ *
+ * @param  {string} val
+ *
+ * @return {string}
+ */
 export function stripDelimiter(val: string): string {
   return val ? String(val).trim().replace(/\s|-/gm, '') : val;
 }
 
+/**
+ * Helper to check if a book matches the passed search rules.
+ * Per Default this method only returns the book as a match if
+ * all rules match. Use the param 'or=true' to mark one match as sufficient.
+ *
+ * @param  {Book}         book
+ * @param  {SearchRule[]} rules
+ * @param  {boolean}      [or=false] if true only one rule needs to match.
+ *
+ * @return {boolean}
+ */
 export function matchesSearchRule(book: Book, rules: SearchRule[], or = false): boolean {
   let matches = false;
 
@@ -114,7 +130,14 @@ export function matchesSearchRule(book: Book, rules: SearchRule[], or = false): 
   return matches;
 }
 
-export function isValidIsbn(isbn: string): boolean {
+/**
+ * Validates isbn value by checking length and checksum of the isbn.
+ *
+ * @param  {string}  isbn
+ *
+ * @return {boolean}
+ */
+export function isValidIsbnChecksum(isbn: string): boolean {
   if (!isbn) {
     return false;
   }
@@ -147,6 +170,13 @@ export function isValidIsbn(isbn: string): boolean {
   return false;
 }
 
+/**
+ * Validates isbn format (isbn-10 or isbn-13)
+ *
+ * @param  {string}  isbn
+ *
+ * @return {boolean}
+ */
 export function isValidIsbnFormat(isbn: string): boolean {
 
   const value = stripDelimiter(isbn);

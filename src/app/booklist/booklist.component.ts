@@ -5,6 +5,10 @@ import { Book } from '../interfaces/book.interface';
 import { BookService } from '../services/book.service';
 import { NotificationService } from '../services/notification.service';
 
+/**
+ * This component lists all books found in storage.
+ * Additionally offers some controls to search, filter and sort the data.
+ */
 @Component({
   selector: 'app-booklist',
   templateUrl: './booklist.component.html',
@@ -37,10 +41,24 @@ export class BooklistComponent implements OnInit {
       });
   }
 
+  /**
+   * Triggers edit view for book with related id.
+   *
+   * @param  {string} id
+   *
+   * @return {void}
+   */
   edit(id: string) {
     this.router.navigate(['/'], { queryParams: { showForm: true, id } });
   }
 
+  /**
+   * Removes a book by its id from storage
+   *
+   * @param  {string} id
+   *
+   * @return {void}
+   */
   remove(id: string) {
     this.storage.removeById(id)
       .subscribe((response) => {
@@ -53,6 +71,14 @@ export class BooklistComponent implements OnInit {
       })
   }
 
+  /**
+   * Event handler for search input. Uses dynamic
+   * BookService.search() to retrieve data.
+   *
+   * @param  {Event} event
+   *
+   * @return {void}
+   */
   search(event: Event) {
     const input = event.target as HTMLInputElement;
 
@@ -80,6 +106,11 @@ export class BooklistComponent implements OnInit {
     });
   }
 
+  /**
+   * Resets search input and view and reloads books.
+   *
+   * @return {void}
+   */
   resetSearch() {
     this.searchfield.nativeElement.value = '';
     this.searched = null;

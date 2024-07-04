@@ -5,22 +5,18 @@ import { StorageResponse } from 'src/app/interfaces/storageresponse.interface';
 import { matchesSearchRule, stripDelimiter } from '../utilities/book.helper';
 import { SearchRule } from '../interfaces/searchrule.interface';
 
+/**
+ * Service to manage the book storage.
+ */
 @Injectable({
   providedIn: 'root'
 })
 
-/**
- * Service to retrieve and store books
- */
 export class BookService {
-  /** key in localStorage */
   storename = 'bookstorage';
-
-  /** stored data */
   data: Book[] = [];
 
   constructor() {
-    // initially load in data from localStorage
     this.data = JSON.parse(localStorage.getItem(this.storename) ?? '[]');
   }
 

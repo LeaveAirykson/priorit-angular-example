@@ -1,8 +1,11 @@
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { NotificationService } from '../services/notification.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Notification } from '../interfaces/notification.interface';
+import { NotificationService } from '../services/notification.service';
 
+/**
+ * This component shows notifications passed in from notification service.
+ */
 @Component({
   selector: 'app-notificationarea',
   templateUrl: './notificationarea.component.html',
@@ -27,6 +30,7 @@ export class NotificationareaComponent implements OnInit, OnDestroy {
 
     this.notifications.push(notification);
 
+    // remove not with a delay if needed
     if (typeof notification.options.autoHide == 'number') {
       setTimeout(() => this.remove(notification.id), notification.options.autoHide * 1000);
     }

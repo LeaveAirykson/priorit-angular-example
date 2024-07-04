@@ -1,8 +1,15 @@
 import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { Observable, map, of } from 'rxjs';
 import { BookService } from '../services/book.service';
-import { isValidIsbn, stripDelimiter } from './book.helper';
+import { isValidIsbnChecksum, stripDelimiter } from './book.helper';
 
+/**
+ * Async form validator for checking if an isbn number is already in use.
+ *
+ * @param  {BookService} storage
+ *
+ * @return {AsyncValidatorFn}
+ */
 export function isbnUsedAsyncValidator(storage: BookService): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
 
@@ -17,6 +24,13 @@ export function isbnUsedAsyncValidator(storage: BookService): AsyncValidatorFn {
   }
 }
 
+/**
+ * Form validator for checking isbn number format
+ *
+ * @param  {AbstractControl}  control
+ *
+ * @return {ValidationErrors}
+ */
 export function isbnFormatValidator(control: AbstractControl): ValidationErrors | null {
   if (!control.value) {
     return null;
@@ -27,6 +41,13 @@ export function isbnFormatValidator(control: AbstractControl): ValidationErrors 
   return rege.test(value) ? null : { isbnInvalidFormat: true };
 };
 
+/**
+ * Form validator for checking isbn checksum
+ *
+ * @param  {AbstractControl}  control
+ *
+ * @return {ValidationErrors}
+ */
 export function isbnChecksumValidator(control: AbstractControl): ValidationErrors | null {
   if (!control.value) {
     return null;
@@ -36,5 +57,5 @@ export function isbnChecksumValidator(control: AbstractControl): ValidationError
     return null;
   }
 
-  return isValidIsbn(control.value) ? null : { isbnChecksum: true };
+  return isValidIsbnChecksum(control.value) ? null : { isbnChecksum: true };
 };
