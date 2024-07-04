@@ -1,0 +1,64 @@
+<form [formGroup]="form" class="max-w-80 md:max-w-2xl">
+  <legend class="form-legend">Filter anpassen</legend>
+  <div class="mb-2">
+    <label class="form-label font-bold">Jahr</label>
+    <div class="w-full">
+      <ng-template *ngTemplateOutlet="filternumberoption;context:{prefix: 'year', placeholder: 'JJJJ'}"></ng-template>
+    </div>
+  </div>
+  <div class="mb-2">
+    <label class="form-label font-bold">Seitenanzahl</label>
+    <div class="w-full">
+      <ng-template *ngTemplateOutlet="filternumberoption;context:{prefix: 'pagecount', placeholder: ''}"></ng-template>
+    </div>
+  </div>
+  <div class="mb-2">
+    <label class="form-label font-bold">Vergütungswert</label>
+    <div class="w-full">
+      <ng-template
+        *ngTemplateOutlet="filternumberoption;context:{prefix: 'remuneration', placeholder: ''}"></ng-template>
+    </div>
+  </div>
+  <div class="mb-2">
+    <label class="form-label font-bold">Sprachen</label>
+    <select formControlName="language" class="form-input form-input-small h-32" multiple>
+      <option value="all">Alle</option>
+      <option value="Deutsch">Deutsch</option>
+      <option value="Englisch">Englisch</option>
+      <option value="Französisch">Französisch</option>
+      <option value="Niederländisch">Niederländisch</option>
+    </select>
+  </div>
+  <div class="mb-2">
+    <label class="form-label font-bold">Sachgruppen</label>
+    <input type="text" class="form-input form-input-small" formControlName="ddc" placeholder="500.23, 200, ...">
+    <small class="block mt-1 text-xs opacity-60">Mit Beistrich getrennte Liste</small>
+  </div>
+  <div class="button-group w-full mt-4 justify-center">
+    <button [disabled]="form.invalid" type="button" class="button button-primary button-small"
+      (click)="submit()">Anwenden</button>
+    <button type="button" class="button button-small" (click)="abort()">Abbrechen</button>
+  </div>
+</form>
+
+<ng-template #filternumberoption let-prefix="prefix" let-placeholder="placeholder" [formGroup]="form">
+  <select formControlName="{{prefix}}" class="form-input form-input-small">
+    <option value="all">Alle</option>
+    <option value="eq">ist</option>
+    <option value="gt">größer als</option>
+    <option value="gte">größer gleich</option>
+    <option value="lt">kleiner als</option>
+    <option value="lte">kleiner gleich</option>
+    <option value="not">ungleich</option>
+    <option value="range">zwischen</option>
+  </select>
+  <div class="flex gap-1 items-center justify-center mt-1" *ngIf="form.value[prefix] !== 'all'">
+    <input type="text" formControlName="{{prefix}}Start" class="form-input form-input-small"
+      [placeholder]="placeholder">
+    <ng-container *ngIf="form.value[prefix] == 'range'">
+      <small class="opacity-50">bis</small>
+      <input type="text" formControlName="{{prefix}}End" class="form-input form-input-small"
+        [placeholder]="placeholder">
+    </ng-container>
+  </div>
+</ng-template>

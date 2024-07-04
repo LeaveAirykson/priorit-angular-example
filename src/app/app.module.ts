@@ -10,6 +10,7 @@ import { RemunerationPipe } from './pipes/remuneration.pipe';
 import { ExampleoptionsComponent } from './exampleoptions/exampleoptions.component';
 import { NotificationareaComponent } from './notificationarea/notificationarea.component';
 import { ModalComponent } from './modal/modal.component';
+import { BookfilterformComponent } from './bookfilterform/bookfilterform.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ModalComponent } from './modal/modal.component';
     ExampleoptionsComponent,
     NotificationareaComponent,
     ModalComponent,
+    BookfilterformComponent
   ],
   imports: [
     BrowserModule,
