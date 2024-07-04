@@ -59,3 +59,12 @@ export function isbnChecksumValidator(control: AbstractControl): ValidationError
 
   return isValidIsbnChecksum(control.value) ? null : { isbnChecksum: true };
 };
+
+/**
+ * Regex patterns for validation
+ */
+export const validationPatterns = {
+  year: '^[0-9]{4}$',
+  pagecount: '^[0-9]{1,}$',
+  ddc: '^[0-9]{3}\.[0-9]{1,5}$|^[0-9]{3}$'
+}
