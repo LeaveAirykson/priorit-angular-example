@@ -1,5 +1,5 @@
 import { Book } from '../interfaces/book.interface';
-import { SearchRule } from '../interfaces/searchrule.interface';
+import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
 
 /**
  * Calculates remuneration value for a given book
@@ -61,19 +61,19 @@ export function stripDelimiter(val: string): string {
  * Per Default this method only returns the book as a match if
  * all rules match. Use the param 'or=true' to mark one match as sufficient.
  *
- * @param  {Book}         book
- * @param  {SearchRule[]} rules
- * @param  {boolean}      [or=false] if true only one rule needs to match.
+ * @param  {Book} book
+ * @param  {Array<SearchRule|SearchOrRule>} rules
+ * @param  {boolean} [or=false] if true only one rule needs to match.
  *
  * @return {boolean}
  */
-export function matchesSearchRule(book: Book, rules: SearchRule[], or = false): boolean {
+export function matchesSearchRule(book: Book, rules: Array<SearchRule | SearchOrRule>, or = false): boolean {
   let matches = false;
 
   for (const rule of rules) {
     // recursive matches rules in 'or' mode
     if ('or' in rule) {
-      matches = matchesSearchRule(book, rule.or, true);
+      matches = matchesSearchRule(book, rule['or'], true);
     }
     // otherwise match based on operator
     else {
@@ -128,6 +128,59 @@ export function matchesSearchRule(book: Book, rules: SearchRule[], or = false): 
   }
 
   return matches;
+}
+
+/**
+ * Transforms book filter data to a set of SearchRules
+ *
+ * @param  {object} data
+ *
+ * @return {SearchRule[]}
+ */
+export function filter2Rule(data: { [key: string]: any }) {
+  const rules: Array<SearchRule | SearchOrRule> = [];
+
+  // first handle the specific operator
+  // based fields and add it as a search rule
+  ['year', 'pagecount', 'remuneration'].map((key) => {
+    if (key in data && data?.[key] !== 'all') {
+      rules.push({
+        property: key as keyof Book,
+        operator: data[key],
+        value: data[key + 'Start'],
+        value2: data[key + 'End']
+      });
+    }
+  });
+
+  // languages need to be added as an or-rule
+  if (!data?.['language']?.includes('all')) {
+    const rule: SearchRule[] = [];
+
+    data['language'].map((l: string) => {
+      rule.push({
+        property: 'language',
+        value: l
+      });
+    });
+
+    rules.push({ or: rule });
+  }
+
+  // ddc rules need to be added as an or-rule
+  if (data['ddc']) {
+    const ddcstr = data['ddc'].replace(/[^0-9.,]/gm, '');
+    const ddcarr = ddcstr.split(',').filter((f: string) => f);
+
+    ddcarr.map((val: string) => {
+      rules.push({
+        property: 'ddc',
+        value: val
+      });
+    });
+  }
+
+  return rules;
 }
 
 /**

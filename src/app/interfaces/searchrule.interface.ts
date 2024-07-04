@@ -1,14 +1,13 @@
 import { Book } from './book.interface';
 
-export type SearchOrRule = {
-  or: SearchBaseRule[]
-}
-
-export type SearchBaseRule = {
+export interface SearchRule {
   property: keyof Book;
   value: any;
+  value2?: any;
   operator?: string;
   flags?: string;
 }
 
-export type SearchRule = SearchOrRule | SearchBaseRule;
+export interface SearchOrRule {
+  or: SearchRule[]
+}

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Book } from 'src/app/interfaces/book.interface';
 import { StorageResponse } from 'src/app/interfaces/storageresponse.interface';
 import { matchesSearchRule, stripDelimiter } from '../utilities/book.helper';
-import { SearchRule } from '../interfaces/searchrule.interface';
+import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
 
 /**
  * Service to manage the book storage.
@@ -136,11 +136,11 @@ export class BookService {
    * Flexible search logic based on defined search rules
    * which support and/or logic.
    *
-   * @param  {SearchRule[]<Book>[]} rules
+   * @param  {Array<SearchRule|SearchOrRule>} rules
    *
    * @return {Observable<Book>[]}
    */
-  search(rules: SearchRule[]): Observable<Book[]> {
+  search(rules: Array<SearchRule | SearchOrRule>): Observable<Book[]> {
     const result = this.data.filter((b) => matchesSearchRule(b, rules));
     return this.response<Book[]>(result);
   }
