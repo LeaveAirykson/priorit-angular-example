@@ -55,7 +55,7 @@
     </div>
   </fieldset>
 </form>
-
+<!-- Error messages template -->
 <ng-template #formerrors let-control="control">
   <ul class="form-errors" *ngIf="form.controls[control].errors && form.controls[control].dirty">
     <li *ngFor="let error of form.controls[control].errors | keyvalue">
