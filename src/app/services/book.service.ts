@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Book } from 'src/app/interfaces/book.interface';
 import { StorageResponse } from 'src/app/interfaces/storageresponse.interface';
-import { matchesSearchRule, stripDelimiter } from '../utilities/book.helper';
+import { calculateRemuneration, matchesSearchRule, stripDelimiter } from '../utilities/book.helper';
 import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
 
 /**
@@ -29,6 +29,7 @@ export class BookService {
    */
   create(book: Book): Observable<StorageResponse> {
     book.id = 'b' + Date.now();
+    book.remuneration = calculateRemuneration(book);
     this.data.push(book);
     this.save();
 
@@ -59,6 +60,7 @@ export class BookService {
     if (bookIdx >= 0) {
       delete data.id;
       this.data[bookIdx] = ({ ...this.data[bookIdx], ...data } as Book);
+      this.data[bookIdx].remuneration = calculateRemuneration(this.data[bookIdx]);
       this.save();
       response.success = true;
       response.message = 'Änderung wurde erfolgreich gespeichert!';

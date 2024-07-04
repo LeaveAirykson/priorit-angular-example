@@ -36,7 +36,8 @@ export class ExampleoptionsComponent {
         year: 1915,
         pagecount: 88,
         language: 'Deutsch',
-        ddc: '833.91'
+        ddc: '833.91',
+        remuneration: 125
       },
       {
         id: 'b1719851609568',
@@ -45,7 +46,8 @@ export class ExampleoptionsComponent {
         year: 2024,
         pagecount: 368,
         language: 'Deutsch',
-        ddc: '833.92'
+        ddc: '833.92',
+        remuneration: 143
       },
       {
         id: 'b1719909857393',
@@ -54,7 +56,8 @@ export class ExampleoptionsComponent {
         year: 2012,
         pagecount: 816,
         language: 'Englisch',
-        ddc: '895.635'
+        ddc: '895.635',
+        remuneration: 150
       },
       {
         id: 'b1719910727936',
@@ -63,7 +66,8 @@ export class ExampleoptionsComponent {
         year: 2007,
         pagecount: 224,
         language: 'Englisch',
-        ddc: '823.92'
+        ddc: '823.92',
+        remuneration: 120
       },
       {
         id: 'b1719911125599',
@@ -72,7 +76,8 @@ export class ExampleoptionsComponent {
         year: 2016,
         pagecount: 304,
         language: 'Englisch',
-        ddc: '823.92'
+        ddc: '823.92',
+        remuneration: 130
       },
       {
         id: 'b1719911547938',
@@ -81,7 +86,8 @@ export class ExampleoptionsComponent {
         year: 1975,
         pagecount: 1136,
         language: 'Deutsch',
-        ddc: '833.92'
+        ddc: '833.92',
+        remuneration: 180
       }
     ];
 

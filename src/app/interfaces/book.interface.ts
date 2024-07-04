@@ -6,4 +6,5 @@ export interface Book {
   pagecount: number;
   language: string;
   ddc: string;
+  remuneration: number;
 }
