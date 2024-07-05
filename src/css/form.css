@@ -192,16 +192,18 @@ select,
   font-size: 0.8rem;
 }
 
-.button-delete {
-  --_color: var(--fg-color);
-  --_background-color: transparent;
-  --_hover-background-color: transparent;
-  --_hover-color: #ff0000;
-}
-
-.button-edit {
+.button-option {
   --_color: var(--fg-color);
   --_background-color: transparent;
   --_hover-background-color: transparent;
   --_hover-color: var(--ci-secondary);
+
+  padding: 0.3rem 0.3rem;
+  line-height: 1;
+  font-weight: normal;
+}
+
+.button-option-delete {
+  --_hover-background-color: transparent;
+  --_hover-color: #ff0000;
 }
