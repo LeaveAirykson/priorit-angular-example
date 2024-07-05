@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Book } from '../interfaces/book.interface';
+import { BookFilter } from '../interfaces/bookfilter.interface';
 import { BookService } from '../services/book.service';
 import { NotificationService } from '../services/notification.service';
-import { filter2Rule } from '../utilities/book.helper';
-import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
+import { filter2Rule, filterLabels, operatorMap } from '../utilities/book.helper';
 
 /**
  * This component lists all books found in storage.
@@ -19,8 +19,10 @@ export class BooklistComponent implements OnInit {
   searched: string | null = null;
   @ViewChild('searchfield') searchfield: ElementRef<HTMLInputElement>;
   markedForRemoval: Book | null = null;
-  filterModalVisible = true;
-  activeFilter: Array<SearchRule | SearchOrRule> = [];
+  filterModalVisible = false;
+  resultNoticeVisible = false;
+  filterData: BookFilter | null = null;
+  activeFilter: { label: string; value: string }[] = [];
 
   constructor(
     private router: Router,
@@ -94,8 +96,11 @@ export class BooklistComponent implements OnInit {
 
     if (!input.value) {
       this.resetSearch();
+      this.loadBooks();
       return;
     }
+
+    this.resetFilter();
 
     this.storage.search([
       {
@@ -113,6 +118,7 @@ export class BooklistComponent implements OnInit {
     ]).subscribe(result => {
       this.data = result;
       this.searched = input.value;
+      this.resultNoticeVisible = true;
     });
   }
 
@@ -124,7 +130,6 @@ export class BooklistComponent implements OnInit {
   resetSearch() {
     this.searchfield.nativeElement.value = '';
     this.searched = null;
-    this.loadBooks();
   }
 
   /**
@@ -150,27 +155,94 @@ export class BooklistComponent implements OnInit {
   }
 
   /**
+   * Shows/hides result notice
+   *
+   * @param  {boolean} show
+   *
+   * @return {void}
+   */
+  showResultNotice(show = true) {
+    this.resultNoticeVisible = show;
+  }
+
+  /**
    * Consumes set filter and reloads data
    *
    * @param  {object} data
    *
    * @return {void}
    */
-  runFilter(data: { [key: string]: any }) {
+  runFilter(data: BookFilter) {
     this.showFilterModal(false);
-    console.log(data);
+    this.updateActiveFilter(data);
+    const activeFilter = filter2Rule(data);
 
-    this.activeFilter = filter2Rule(data);
+    if (activeFilter.length) {
+      this.storage.search(activeFilter)
+        .subscribe((result) => {
+          this.data = result;
+          this.showResultNotice();
+        });
+    } else {
+      this.loadBooks();
+    }
+  }
 
-    console.log(this.activeFilter);
+  /**
+   * Sets the labels for active filters based ond passed
+   * form values
+   *
+   * @param  {BookFilter} data
+   *
+   * @return {void}
+   */
+  updateActiveFilter(data: BookFilter) {
+    const filter: { label: string; value: string }[] = [];
+    this.filterData = data;
 
-    // if (this.activeFilter.length) {
-    //   this.storage.search(this.activeFilter)
-    //     .subscribe((result) => {
-    //       console.log(result);
-    //     });
-    // } else {
-    //   this.loadBooks();
-    // }
+    Object.keys(filterLabels).map((k) => {
+      const value = String(data[k as keyof BookFilter]);
+
+      // ignore empty ones
+      if (['null', 'all'].includes(value)) { return; }
+
+      // find related start - end fields and create
+      // label based on these values and operator data
+      const val = data[k + 'Start' as keyof BookFilter] ?? null;
+      const val2 = data[k + 'End' as keyof BookFilter] ?? null;
+      const lbl = [operatorMap[value]?.short ?? value, val, val2 ? '-' + val2 : ''];
+
+      filter.push({
+        label: filterLabels[k],
+        value: lbl.join(' ')
+      });
+
+    });
+
+    this.activeFilter = filter;
+  }
+
+  /**
+   * Resets filter related fields and data
+   *
+   * @return {void}
+   */
+  resetFilter() {
+    this.showFilterModal(false);
+    this.activeFilter = [];
+    this.filterData = null;
+  }
+
+  /**
+   * Resets whole view with search, filtering, sorting
+   * and reloads book list.
+   *
+   * @return {void}
+   */
+  reset() {
+    this.resetSearch();
+    this.resetFilter();
+    this.showResultNotice(false);
+    this.loadBooks();
   }
 }

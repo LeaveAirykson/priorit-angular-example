@@ -21,6 +21,7 @@ export class BookhomeComponent {
   }
 
   constructor(private router: Router) {
+    // extract id and showForm params
     this.router.events.subscribe((e) => {
       if (e instanceof ActivationEnd) {
         this.id = e.snapshot.queryParams['id'];
@@ -43,6 +44,11 @@ export class BookhomeComponent {
     this.options[opt.key] = opt.val;
   }
 
+  /**
+   * Hides the form by navigating to start
+   *
+   * @return {void}
+   */
   hideForm() {
     this.formVisible = false;
     this.router.navigate(['/']);

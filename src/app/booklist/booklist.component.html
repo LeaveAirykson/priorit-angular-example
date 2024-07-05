@@ -1,9 +1,6 @@
-<!-- search and display options -->
-<div class="mb-4 flex gap-4 justify-between">
-  <div class="w-full max-w-80">
-    <input #searchfield type="text" class="form-input form-search" placeholder="Suche nach Titel oder ISBN"
-      (keydown.enter)="search($event)">
-  </div>
+<!-- titlebar -->
+<div class="w-full flex flex-col gap-2 mb-4 sm:flex-row sm:justify-between items-center">
+  <h1 class="mb-0">Verzeichnis</h1>
   <div class="button-group">
     <button routerLink="/" [queryParams]="{showForm: true}" class="button button-primary">
       <span class="material-symbols-outlined">post_add</span>
@@ -16,80 +13,82 @@
   </div>
 </div>
 
-<!-- search result notice -->
-<ng-container *ngIf="searched">
+<!-- filter and search -->
+<div class="w-full flex flex-col flex-wrap gap-4 mb-4 xl:flex-row xl:flex-nowrap">
+  <div class="inline-flex gap-2 flex-wrap items-center xl:w-full">
+    <strong class="inline-flex items-center opacity-50 text-xs">
+      <span class="material-symbols-outlined">filter_alt</span>
+      Filter
+    </strong>
+    <span class="flag" *ngFor="let filter of activeFilter">
+      {{ filter.label }} <strong>{{ filter.value }}</strong>
+    </span>
+    <button class="button button-icon" (click)="showFilterModal()" title="Filter bearbeiten">
+      <span class="material-symbols-outlined">edit</span>
+    </button>
+  </div>
+  <div class="w-full xl:w-auto">
+    <input #searchfield type="text" class="form-input form-input-small form-search md:min-w-96"
+      placeholder="Suche nach Titel oder ISBN" (keydown.enter)="search($event)">
+  </div>
+</div>
+
+<!-- search and filter result notice -->
+<ng-container *ngIf="resultNoticeVisible">
   <div class="flex justify-center gap-2 items-center flex-wrap mb-4">
-    <span>{{data.length ? data.length : 'Keine' }} Ergebnisse gefunden für: '{{searched}}'</span>
-    <button class="button button-icon" title="zurücksetzen" (click)="resetSearch()"><span
+    <span>{{data.length ? data.length : 'Keine' }} Ergebnis(se) gefunden <span *ngIf="searched">für:
+        '{{searched}}'</span></span>
+    <button class="button button-icon" title="zurücksetzen" (click)="reset()"><span
         class="material-symbols-outlined">close</span></button>
   </div>
 </ng-container>
 
-<!-- empty notice -->
-<ng-template #emptyNotice>
-  <div class="p-4 text-center italic opacity-50">Es wurden noch keine Bücher erfasst.</div>
-</ng-template>
-
-<!-- book datatable -->
-<ng-container *ngIf="data.length; else emptyNotice">
-  <div class="filter-form mb-8">
-    <fieldset class="form-fieldset">
-      <legend class="form-legend">Filter</legend>
-      <div class="flex gap-2 flex-wrap">
-        <span class="flag">Jahre: <strong>Alle</strong></span>
-        <span class="flag">Seitenanzahl: <strong>Alle</strong></span>
-        <span class="flag">Sprachen: <strong>Alle</strong></span>
-        <span class="flag">Sachgruppen: <strong>Alle</strong></span>
-        <span class="flag">Vergütungswerte: <strong>Alle</strong></span>
-        <button class="button button-small" (click)="showFilterModal()">Bearbeiten</button>
-      </div>
-    </fieldset>
-  </div>
-  <div class="datatable">
-    <table>
-      <thead class="whitespace-nowrap">
-        <tr>
-          <th>Titel</th>
-          <th>ISBN</th>
-          <th>Jahr</th>
-          <th>Seitenanzahl</th>
-          <th class="text-right">Sprache</th>
-          <th class="text-right">Sachgruppe</th>
-          <th class="text-right">Vergütungswert (€)</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let book of data">
-          <td>{{ book.title }}</td>
-          <td>{{ book.isbn }}</td>
-          <td>{{ book.year }}</td>
-          <td>{{ book.pagecount }}</td>
-          <td class="text-right">{{ book.language }}</td>
-          <td class="text-right">{{ book.ddc }}</td>
-          <td class="text-right">{{ book.remuneration }}</td>
-          <td class="text-right whitespace-nowrap">
-            <button (click)="edit(book.id)" type="button" class="button button-icon button-edit" title="bearbeiten">
-              <span class="material-symbols-outlined">edit</span>
-            </button>
-            <button (click)="remove(book.id)" type="button" class="button button-icon button-delete" title="löschen">
-              <span class="material-symbols-outlined">delete</span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</ng-container>
+<!-- books data table -->
+<div class="datatable">
+  <table>
+    <thead class="whitespace-nowrap">
+      <tr>
+        <th>Titel</th>
+        <th>ISBN</th>
+        <th>Jahr</th>
+        <th>Seitenanzahl</th>
+        <th class="text-right">Sprache</th>
+        <th class="text-right">Sachgruppe</th>
+        <th class="text-right">Vergütungswert (€)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let book of data">
+        <td>{{ book.title }}</td>
+        <td>{{ book.isbn }}</td>
+        <td>{{ book.year }}</td>
+        <td>{{ book.pagecount }}</td>
+        <td class="text-right">{{ book.language }}</td>
+        <td class="text-right">{{ book.ddc }}</td>
+        <td class="text-right">{{ book.remuneration }}</td>
+        <td class="text-right whitespace-nowrap">
+          <button (click)="edit(book.id)" type="button" class="button button-icon button-edit" title="bearbeiten">
+            <span class="material-symbols-outlined">edit</span>
+          </button>
+          <button (click)="remove(book.id)" type="button" class="button button-icon button-delete" title="löschen">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <!-- filter modal -->
-<app-modal *ngIf="filterModalVisible" (closing)="showFilterModal(false)" maxWidth="400px">
-  <app-bookfilterform (update)="runFilter($event)" (cancel)="showFilterModal(false)"></app-bookfilterform>
+<app-modal *ngIf="filterModalVisible" (closing)="showFilterModal(false)">
+  <app-bookfilterform width="400px" [filter]="filterData" (update)="runFilter($event)"
+    (cancel)="showFilterModal(false)"></app-bookfilterform>
 </app-modal>
 
 <!-- deletion modal -->
 <app-modal *ngIf="markedForRemoval" (closing)="markForRemoval()">
-  <div class="text-center mb-2">Titel <strong>"{{markedForRemoval.title}}"</strong> wirklich löschen?</div>
+  <div class="text-center mb-2"><strong>"{{markedForRemoval.title}}"</strong> wirklich löschen?</div>
   <div class="button-group w-full items-center justify-center">
     <button (click)="remove(markedForRemoval.id)" class="button button-primary">Löschen</button>
     <button (click)="markForRemoval()" class="button">Abbrechen</button>
