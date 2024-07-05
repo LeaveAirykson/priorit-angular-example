@@ -9,18 +9,18 @@
   <div class="mb-2">
     <label class="form-label font-bold">Seitenanzahl</label>
     <div class="w-full">
-      <ng-template *ngTemplateOutlet="filternumberoption;context:{prefix: 'pagecount', placeholder: ''}"></ng-template>
+      <ng-template *ngTemplateOutlet="filternumberoption;context:{prefix: 'pagecount'}"></ng-template>
     </div>
   </div>
   <div class="mb-2">
     <label class="form-label font-bold">Vergütungswert</label>
     <div class="w-full">
-      <ng-template
-        *ngTemplateOutlet="filternumberoption;context:{prefix: 'remuneration', placeholder: ''}"></ng-template>
+      <ng-template *ngTemplateOutlet="filternumberoption;context:{prefix: 'remuneration'}"></ng-template>
     </div>
   </div>
   <div class="mb-2">
     <label class="form-label font-bold">Sprachen</label>
+    <small class="block text-xs opacity-60 mb-1">Mehrfachauswahl möglich (Strg + Klick)</small>
     <select formControlName="language" class="form-input form-input-small h-32" multiple>
       <option value="all">Alle</option>
       <option value="Deutsch">Deutsch</option>
@@ -31,8 +31,8 @@
   </div>
   <div class="mb-2">
     <label class="form-label font-bold">Sachgruppen</label>
+    <small class="block text-xs opacity-60 mb-1">Mit Beistrich getrennte Liste</small>
     <input type="text" class="form-input form-input-small" formControlName="ddc" placeholder="500.23, 200, ...">
-    <small class="block mt-1 text-xs opacity-60">Mit Beistrich getrennte Liste</small>
   </div>
   <div class="button-group w-full mt-4 justify-center">
     <button [disabled]="form.invalid" type="button" class="button button-primary button-small"
@@ -54,11 +54,11 @@
   </select>
   <div class="flex gap-1 items-center justify-center mt-1" *ngIf="form.value[prefix] !== 'all'">
     <input type="text" formControlName="{{prefix}}Start" class="form-input form-input-small"
-      [placeholder]="placeholder">
+      [placeholder]="placeholder ?? ''">
     <ng-container *ngIf="form.value[prefix] == 'range'">
       <small class="opacity-50">bis</small>
       <input type="text" formControlName="{{prefix}}End" class="form-input form-input-small"
-        [placeholder]="placeholder">
+        [placeholder]="placeholder ?? ''">
     </ng-container>
   </div>
 </ng-template>
