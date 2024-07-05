@@ -2,6 +2,7 @@
 
 - Angular 15
 - chart.js
+- ts-prune
 - Tailwind CSS
 - Jest
 
@@ -14,7 +15,6 @@
 
 ## Verbesserungen/weitere Überlegungen
 
-- Da das Beispiel sehr kompakt ist, wurde auf ein Pfad Routing verzichtet. In der Praxis wäre es je nach Umfang meist sinnvoller entsprechende Pfade festzulegen um bei einem Page Reload Modale und ausgewählte Filter nicht zu verlieren.
 - Die Datentabelle gibt aktuell alle Daten aus. Es wäre in der Praxis sinnvoll eine Pagination in der Datentabelle zu verwenden um die Performance zu verbessern.
 - Filter: Sachgruppe könnte man per Regex lösen um auf die ersten 3 Gliederungsebenen zu matchen. Beispiel: 500, 500.100, 500.234.
 - Man könnte mittels Shortcuts die UX deutlich verbessern.
