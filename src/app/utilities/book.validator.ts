@@ -1,7 +1,7 @@
 import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { Observable, map, of } from 'rxjs';
 import { BookService } from '../services/book.service';
-import { isValidIsbnChecksum, stripDelimiter } from './book.helper';
+import { isValidIsbnChecksum, isValidIsbnFormat, stripDelimiter } from './book.helper';
 
 /**
  * Async form validator for checking if an isbn number is already in use.
@@ -36,9 +36,7 @@ export function isbnFormatValidator(control: AbstractControl): ValidationErrors 
     return null;
   }
 
-  const value = stripDelimiter(control.value);
-  const rege = /^([0-9]{9}[0-9X]{1}|[0-9]{13})$/gm;
-  return rege.test(value) ? null : { isbnInvalidFormat: true };
+  return isValidIsbnFormat(control.value) ? null : { isbnInvalidFormat: true };
 };
 
 /**
