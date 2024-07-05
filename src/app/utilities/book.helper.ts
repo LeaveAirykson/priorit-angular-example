@@ -98,6 +98,10 @@ export function matchesSearchRule(book: Book, rules: Array<SearchRule | SearchOr
           matches = book[rule.property] !== rule.value;
           break;
 
+        case 'range':
+          matches = book[rule.property] >= rule.value && book[rule.property] <= rule.value2;
+          break;
+
         case 'regex':
           let flags = rule.flags ?? 'gmi';
           let teststr = String(book[rule.property]);
@@ -128,6 +132,56 @@ export function matchesSearchRule(book: Book, rules: Array<SearchRule | SearchOr
   }
 
   return matches;
+}
+
+/**
+ * Map of relational operators
+ * with readable long/short names
+ */
+export const operatorMap: { [key: string]: { long: string; short: string } } = {
+  eq: {
+    long: 'ist',
+    short: '='
+  },
+  gt: {
+    long: 'größer als',
+    short: '>'
+  },
+  gte: {
+    long: 'größer gleich',
+    short: '≥'
+  },
+  lt: {
+    long: 'kleiner als',
+    short: '<'
+  },
+  lte: {
+    long: 'kleiner gleich',
+    short: '≤'
+  },
+  not: {
+    long: 'ungleich',
+    short: '≠'
+  },
+  range: {
+    long: 'zwischen',
+    short: ''
+  },
+  regex: {
+    long: 'Muster',
+    short: 'Muster'
+  }
+};
+
+/**
+ * Map of readable labels for filters
+ */
+export const filterLabels: { [key: string]: string } = {
+  year: 'Jahre',
+  pagecount: 'Seitenanzahl',
+  language: 'Sprachen',
+  ddc: 'Sachgruppen',
+  remuneration: 'Vergütungswerte'
 }
 
 /**
