@@ -13,8 +13,6 @@ export class NotificationService {
 
   private notifications = new Subject<Notification>();
 
-  constructor() { }
-
   success(message: string, options?: NotificationOptions) {
     this.notify(message, 'success', options);
   }

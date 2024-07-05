@@ -23,6 +23,13 @@ export class NotificationareaComponent implements OnInit, OnDestroy {
       .subscribe((notification) => this.add(notification));
   }
 
+  /**
+   * Adds a notification to the notification stack
+   *
+   * @param  {Notification} notification
+   *
+   * @return {void}
+   */
   add(notification: Notification) {
     if (notification.options.clear) {
       this.notifications = [];
@@ -36,6 +43,13 @@ export class NotificationareaComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Removes a notification from notification stack by its id
+   *
+   * @param  {string} id
+   *
+   * @return {void}
+   */
   remove(id: string) {
     this.notifications = this.notifications.filter((f) => f.id !== id);
   }

@@ -7,6 +7,7 @@ import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
 
 /**
  * Service to manage the book storage.
+ * As there is no backend data will be stored in clients localStorage.
  */
 @Injectable({
   providedIn: 'root'
