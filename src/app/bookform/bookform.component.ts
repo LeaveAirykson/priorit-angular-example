@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -18,6 +18,7 @@ export class BookformComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('title') titleInput: ElementRef<HTMLInputElement>;
   @Input() set id(id: string) { this.loadBookById(id); }
   @Input() set validateIsbnChecksum(validate: boolean) { this.toggleIsbnChecksumValidator(validate); }
+  @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   form!: FormGroup;
   destroy$ = new Subject();
   editmode = false;
@@ -100,12 +101,23 @@ export class BookformComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     } else {
       this.storage.create(this.form.value)
+        .pipe(takeUntil(this.destroy$))
         .subscribe((response) => {
           this.form.reset();
           this.notification.success(response.message);
           this.focusTitleInput();
         })
     }
+  }
+
+  /**
+   * Resets form and emits cancel event.
+   *
+   * @return {void}
+   */
+  abort() {
+    this.form.reset();
+    this.cancel.emit(true);
   }
 
   /**
@@ -142,10 +154,11 @@ export class BookformComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.storage.getById(id)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((val) => {
         if (!val) {
           this.editmode = false;
-          this.router.navigate(['/'], { queryParams: { showForm: true } });
+          this.router.navigate(['/edit', id]);
           return;
         }
 

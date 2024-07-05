@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ActivationEnd, Router } from '@angular/router';
 
 /**
  * Component used as wrapper around booklist view.
@@ -10,24 +9,12 @@ import { ActivationEnd, Router } from '@angular/router';
   templateUrl: './bookhome.component.html',
 })
 export class BookhomeComponent {
-  id!: string;
-  formVisible = false;
   /**
    * unspecific options used to change behaviour
    * of the example application
    */
   options: { [key: string]: any; } = {
     validateIsbnChecksum: true
-  }
-
-  constructor(private router: Router) {
-    // extract id and showForm params
-    this.router.events.subscribe((e) => {
-      if (e instanceof ActivationEnd) {
-        this.id = e.snapshot.queryParams['id'];
-        this.formVisible = e.snapshot.queryParams['showForm'];
-      }
-    });
   }
 
   /**
@@ -42,15 +29,5 @@ export class BookhomeComponent {
    */
   overrideOption(opt: { key: string; val: any }) {
     this.options[opt.key] = opt.val;
-  }
-
-  /**
-   * Hides the form by navigating to start
-   *
-   * @return {void}
-   */
-  hideForm() {
-    this.formVisible = false;
-    this.router.navigate(['/']);
   }
 }

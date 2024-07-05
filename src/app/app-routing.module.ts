@@ -6,6 +6,20 @@ const routes: Routes = [
   {
     path: '',
     component: BookhomeComponent
+  },
+  {
+    path: 'edit/:id',
+    component: BookhomeComponent
+  },
+  {
+    path: 'search',
+    component: BookhomeComponent,
+    data: { search: true }
+  },
+  {
+    path: 'filter',
+    component: BookhomeComponent,
+    data: { filter: true }
   }
 ];
 

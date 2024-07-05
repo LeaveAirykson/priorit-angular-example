@@ -136,15 +136,15 @@ export class BookService {
   }
 
   /**
-   * Flexible search logic based on defined search rules
+   * Flexible retrieval based on defined search rules
    * which support and/or logic.
    *
-   * @param  {Array<SearchRule|SearchOrRule>} rules
+   * @param  {Array<SearchRule|SearchOrRule>} [rules]
    *
    * @return {Observable<Book>[]}
    */
-  search(rules: Array<SearchRule | SearchOrRule>): Observable<Book[]> {
-    const result = this.data.filter((b) => matchesSearchRule(b, rules));
+  get(rules?: Array<SearchRule | SearchOrRule>): Observable<Book[]> {
+    const result = rules && rules.length ? this.data.filter((b) => matchesSearchRule(b, rules)) : this.data;
     return this.response<Book[]>(result);
   }
 
@@ -153,7 +153,7 @@ export class BookService {
    *
    * @return {void}
    */
-  private save() {
+  private save(): void {
     localStorage.setItem(this.storename, JSON.stringify(this.data));
   }
 

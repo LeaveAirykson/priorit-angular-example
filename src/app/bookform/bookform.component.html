@@ -51,7 +51,7 @@
     <div class="flex justify-center items-center flex-wrap gap-4 md:col-span-full">
       <button [disabled]="form.invalid" (click)="submit()" type="button"
         class="button button-primary">Speichern</button>
-      <button routerLink="/" type="button" class="button">Abbrechen</button>
+      <button (click)="abort()" type="button" class="button">Abbrechen</button>
     </div>
     <div class="col-span-full italic text-xs text-center opacity-50">*Pflichtfeld</div>
   </div>
