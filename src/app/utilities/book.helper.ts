@@ -8,7 +8,7 @@ import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
  *
  * @return {number}
  */
-export function calculateRemuneration(book: Book): number {
+export function calculateRemuneration(data: Book): number {
   let result = 100;
   let additions = 0;
 
@@ -31,16 +31,18 @@ export function calculateRemuneration(book: Book): number {
   };
 
   // multiply by page related factor
-  for (const range of factorRanges) {
-    if (book.pagecount >= range.from && (!range.to || book.pagecount <= range.to)) {
-      result *= range.factor;
-      break;
+  if (data.pagecount) {
+    for (const range of factorRanges) {
+      if (data.pagecount >= range.from && (!range.to || data.pagecount <= range.to)) {
+        result *= range.factor;
+        break;
+      }
     }
   }
 
   // add calculated additions
-  additions += additionsFn.year(book.year);
-  additions += additionsFn.language(book.language, result);
+  additions += data.year ? additionsFn.year(data.year) : 0;
+  additions += data.language ? additionsFn.language(data.language, result) : 0;
 
   return Number((result + additions).toFixed(2));
 }
@@ -201,8 +203,8 @@ export function filter2Rule(data: { [key: string]: any }) {
       rules.push({
         property: key as keyof Book,
         operator: data[key],
-        value: data[key + 'Start'],
-        value2: data[key + 'End']
+        value: (key + 'Start') in data ? Number(data[key + 'Start']) : null,
+        value2: (key + 'End') in data ? Number(data[key + 'End']) : null,
       });
     }
   });

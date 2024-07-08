@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Book } from 'src/app/interfaces/book.interface';
+import { Book, BookData } from 'src/app/interfaces/book.interface';
 import { StorageResponse } from 'src/app/interfaces/storageresponse.interface';
-import { calculateRemuneration, matchesSearchRule, stripDelimiter } from '../utilities/book.helper';
 import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
+import { matchesSearchRule, stripDelimiter } from '../utilities/book.helper';
 
 /**
  * Service to manage the book storage.
@@ -28,10 +28,8 @@ export class BookService {
    *
    * @return {Observable<StorageResponse>}
    */
-  create(book: Book): Observable<StorageResponse> {
-    book.id = 'b' + Date.now();
-    book.remuneration = calculateRemuneration(book);
-    this.data.push(book);
+  create(data: BookData): Observable<StorageResponse> {
+    this.data.push(new Book(data));
     this.save();
 
     const response: StorageResponse = {
@@ -50,7 +48,7 @@ export class BookService {
    *
    * @return {Observable<StorageResponse>}
    */
-  update(id: string, data: Partial<Book>): Observable<StorageResponse> {
+  update(id: string, data: Partial<BookData>): Observable<StorageResponse> {
     const response: StorageResponse = {
       success: false,
       message: 'Das Buch mit der id "' + id + '" existiert nicht!'
@@ -60,8 +58,7 @@ export class BookService {
 
     if (bookIdx >= 0) {
       delete data.id;
-      this.data[bookIdx] = ({ ...this.data[bookIdx], ...data } as Book);
-      this.data[bookIdx].remuneration = calculateRemuneration(this.data[bookIdx]);
+      this.data[bookIdx] = new Book(({ ...this.data[bookIdx], ...data } as BookData));
       this.save();
       response.success = true;
       response.message = 'Änderung wurde erfolgreich gespeichert!';
