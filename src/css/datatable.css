@@ -11,7 +11,7 @@
 
 .datatable th {
   font-size: .8rem;
-  border-bottom: 1px solid var(--border-color);
+  background-color: #f3f3f3;
 }
 
 .datatable th,
@@ -20,9 +20,9 @@
 }
 
 .datatable tr:nth-child(even) {
-  background-color: #e5e5e5;
+  background-color: #f9f9f9;
 }
 
 .datatable tbody tr:hover {
-  background-color: var(--blue-060);
+  background-color: var(--blue-050);
 }

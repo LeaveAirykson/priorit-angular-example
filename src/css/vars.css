@@ -9,6 +9,7 @@
   --gutter: 1.5rem;
 
   /* color palette */
+  --blue-050: #edf3f6;
   --blue-060: #dae7ed;
   --blue-070: #c8dce3;
   --blue-080: #b5d0da;
@@ -67,6 +68,6 @@
   --ci-primary: var(--blue-500);
   --ci-secondary: var(--blue-700);
   --fg-color: #353535;
-  --bg-color: #f7f7f7;
+  --bg-color: #fff;
   --border-color: #ccc;
 }
