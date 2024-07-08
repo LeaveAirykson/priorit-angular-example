@@ -11,6 +11,8 @@ import { ExampleoptionsComponent } from './exampleoptions/exampleoptions.compone
 import { NotificationareaComponent } from './notificationarea/notificationarea.component';
 import { ModalComponent } from './modal/modal.component';
 import { BookfilterformComponent } from './bookfilterform/bookfilterform.component';
+import { SortableDirective } from './sortable.directive';
+import { SortbyDirective } from './sortby.directive';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { BookfilterformComponent } from './bookfilterform/bookfilterform.compone
     ExampleoptionsComponent,
     NotificationareaComponent,
     ModalComponent,
-    BookfilterformComponent
+    BookfilterformComponent,
+    SortableDirective,
+    SortbyDirective
   ],
   imports: [
     BrowserModule,
