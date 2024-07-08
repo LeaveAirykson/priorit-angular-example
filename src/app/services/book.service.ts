@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Book, BookData } from 'src/app/interfaces/book.interface';
 import { StorageResponse } from 'src/app/interfaces/storageresponse.interface';
 import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
+import { SortEvent } from '../sortby.directive';
 import { matchesSearchRule, stripDelimiter } from '../utilities/book.helper';
 
 /**
@@ -111,15 +112,6 @@ export class BookService {
   }
 
   /**
-   * Retrieve all book data
-   *
-   * @return {Observable<Book[]>}[return description]
-   */
-  getData(): Observable<Book[]> {
-    return this.response<Book[]>(this.data);
-  }
-
-  /**
    * Retrieve a book by its property
    *
    * @param  {keyof Book} prop property to find by
@@ -142,17 +134,21 @@ export class BookService {
    */
   get(
     rules?: Array<SearchRule | SearchOrRule>,
-    sort?: { property: keyof Book, direction: 'asc' | 'desc' }
+    sort?: SortEvent
   ): Observable<Book[]> {
-    const result = rules && rules.length ? this.data.filter((b) => matchesSearchRule(b, rules)) : this.data;
+    let result = this.data;
+
+    if (rules && rules.length) {
+      result = this.data.filter((b) => matchesSearchRule(b, rules));
+    }
 
     if (sort) {
       result.sort((a, b) => {
         if (sort.direction == 'asc') {
-          return a[sort.property] < b[sort.property] ? -1 : 1;
+          return a[sort.column as keyof Book] < b[sort.column as keyof Book] ? -1 : 1;
         }
 
-        return a[sort.property] < b[sort.property] ? 1 : -1;
+        return a[sort.column as keyof Book] < b[sort.column as keyof Book] ? 1 : -1;
       });
     }
 

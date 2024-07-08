@@ -3,11 +3,11 @@
   <h1 class="mb-0">Verzeichnis</h1>
   <div class="button-group">
     <button (click)="showAddForm()" class="button button-primary">
-      <span class="material-symbols-outlined">post_add</span>
+      <span class="icon">post_add</span>
       Buch eintragen
     </button>
     <button type="button" class="button">
-      <span class="material-symbols-outlined text-blue-600">bar_chart</span>
+      <span class="icon text-blue-600">bar_chart</span>
       Visualisierung
     </button>
   </div>
@@ -17,14 +17,14 @@
 <div class="w-full flex flex-col flex-wrap gap-4 mb-4 xl:flex-row xl:flex-nowrap">
   <div class="inline-flex gap-2 flex-wrap items-center xl:w-full">
     <strong class="inline-flex items-center opacity-50 text-xs">
-      <span class="material-symbols-outlined">filter_alt</span>
+      <span class="icon">filter_alt</span>
       Filter
     </strong>
     <span class="flag" *ngFor="let filter of activeFilter">
       {{ filter.label }} <strong>{{ filter.value }}</strong>
     </span>
     <button class="button button-icon" (click)="showModal('filter')" title="Filter bearbeiten">
-      <span class="material-symbols-outlined">edit</span>
+      <span class="icon">edit</span>
     </button>
   </div>
   <div class="w-full xl:w-auto">
@@ -36,13 +36,14 @@
 <!-- search and filter result notice -->
 <ng-container *ngIf="searched">
   <div class="flex justify-center gap-2 items-center flex-wrap mb-4">
-    <span>{{data.length ? data.length : 'Keine' }} Ergebnis(se) gefunden <span *ngIf="searchterm">für:
-        '{{searchterm}}'</span></span>
+    <span>
+      {{data.length ? data.length : 'Keine' }} Ergebnis(se) gefunden
+      <span *ngIf="searchterm">für: '{{searchterm}}'</span>
+    </span>
     <div class="button-group">
-      <button class="button button-icon" title="zurücksetzen" (click)="reset()"><span
-          class="material-symbols-outlined">close</span></button>
+      <button class="button button-icon" title="zurücksetzen" (click)="reset()"><span class="icon">close</span></button>
       <button (click)="loadBooks()" class="button button-icon" title="Aktualisieren">
-        <span class="material-symbols-outlined">refresh</span>
+        <span class="icon">refresh</span>
       </button>
     </div>
   </div>
@@ -52,14 +53,14 @@
 <div class="datatable">
   <table>
     <thead class="whitespace-nowrap">
-      <tr>
-        <th (click)="toggleSortBy('title', $event)" class="sortable" #titleheadcell>Titel</th>
-        <th (click)="toggleSortBy('isbn', $event)" class="sortable">ISBN</th>
-        <th (click)="toggleSortBy('year', $event)" class="sortable">Jahr</th>
-        <th (click)="toggleSortBy('pagecount', $event)" class="sortable">Seitenanzahl</th>
-        <th (click)="toggleSortBy('language', $event)" class="sortable text-right">Sprache</th>
-        <th (click)="toggleSortBy('ddc', $event)" class="sortable text-right">Sachgruppe</th>
-        <th (click)="toggleSortBy('remuneration', $event)" class="sortable text-right">Vergütungswert (€)</th>
+      <tr [sortable]="data" [column]="sort.column" [direction]="sort.direction" (sorted)="sort=$event">
+        <th sortBy="title">Titel</th>
+        <th sortBy="isbn">ISBN</th>
+        <th sortBy="year">Jahr</th>
+        <th sortBy="pagecount">Seitenanzahl</th>
+        <th sortBy="language" class="text-right">Sprache</th>
+        <th sortBy="ddc" class="text-right">Sachgruppe</th>
+        <th sortBy="remuneration" class="text-right">Vergütungswert (€)</th>
         <th></th>
       </tr>
     </thead>
@@ -74,11 +75,11 @@
         <td class="text-right">{{ book.remuneration }}</td>
         <td class="text-right whitespace-nowrap">
           <button (click)="showAddForm(book.id)" type="button" class="button button-option" title="bearbeiten">
-            <span class="material-symbols-outlined">edit</span>
+            <span class="icon">edit</span>
           </button>
           <button (click)="removeBook(book.id)" type="button" class="button button-option button-option-delete"
             title="löschen">
-            <span class="material-symbols-outlined">delete</span>
+            <span class="icon">delete</span>
           </button>
         </td>
       </tr>

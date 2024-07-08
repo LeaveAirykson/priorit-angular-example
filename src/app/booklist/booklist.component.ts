@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { ActivationEnd, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { Book } from '../interfaces/book.interface';
@@ -7,6 +7,7 @@ import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
 import { BookService } from '../services/book.service';
 import { HistoryService } from '../services/history.service';
 import { NotificationService } from '../services/notification.service';
+import { SortEvent } from '../sortby.directive';
 import { filter2Rule, filterLabels, operatorMap } from '../utilities/book.helper';
 
 /**
@@ -17,7 +18,7 @@ import { filter2Rule, filterLabels, operatorMap } from '../utilities/book.helper
   selector: 'app-booklist',
   templateUrl: './booklist.component.html',
 })
-export class BooklistComponent implements OnDestroy, AfterViewInit {
+export class BooklistComponent implements OnDestroy {
   @ViewChild('searchfield') searchfield: ElementRef<HTMLInputElement>;
   @ViewChild('titleheadcell') titleheadcell: ElementRef<HTMLElement>;
   @Input() overrides: { [key: string]: any };
@@ -28,11 +29,11 @@ export class BooklistComponent implements OnDestroy, AfterViewInit {
   markedForRemoval: Book | null = null;
   editId: string;
   filterData: BookFilter | null = null;
-  sort: { property: keyof Book; direction: 'desc' | 'asc', currentEl?: HTMLElement } = {
-    property: 'title',
+  activeFilter: { label: string; value: string }[] = [];
+  sort: SortEvent = {
+    column: 'title',
     direction: 'asc'
   };
-  activeFilter: { label: string; value: string }[] = [];
   modalVisible: { [key: string]: boolean } = {
     filter: false,
     edit: false
@@ -47,14 +48,17 @@ export class BooklistComponent implements OnDestroy, AfterViewInit {
     this.router.events.pipe(takeUntil(this.destroy$))
       .subscribe((e) => {
         if (e instanceof ActivationEnd) {
+          // extract searchterm on /search route
           if (e.snapshot.routeConfig?.path == 'search') {
             this.searchterm = e.snapshot.queryParams['term'];
           }
 
+          // extract and set active filters from queryParams on /filter route
           if (e.snapshot.routeConfig?.path == 'filter') {
             this.setActiveFilter(e.snapshot.queryParams as BookFilter);
           }
 
+          // show edit modal for add/edit params
           if (e.snapshot.queryParams['add']) {
             this.showModal('edit', true);
           } else {
@@ -70,10 +74,6 @@ export class BooklistComponent implements OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
-  }
-
-  ngAfterViewInit(): void {
-    this.setSort('title', 'asc', this.titleheadcell.nativeElement);
   }
 
   /**
@@ -190,6 +190,7 @@ export class BooklistComponent implements OnDestroy, AfterViewInit {
         .pipe(takeUntil(this.destroy$))
         .subscribe((response) => {
           this.notification.success(response.message);
+          this.loadBooks();
           this.hideAddForm();
         });
     } else {
@@ -197,6 +198,7 @@ export class BooklistComponent implements OnDestroy, AfterViewInit {
         .pipe(takeUntil(this.destroy$))
         .subscribe((response) => {
           this.notification.success(response.message);
+          this.loadBooks();
         })
     }
   }
@@ -291,28 +293,6 @@ export class BooklistComponent implements OnDestroy, AfterViewInit {
     });
 
     this.activeFilter = filter;
-  }
-
-  toggleSortBy(property: keyof Book, ev: Event) {
-    const currentEl = ev.currentTarget as HTMLElement;
-    this.setSort(property, this.sort.direction == 'asc' ? 'desc' : 'asc', currentEl);
-    this.loadBooks();
-  }
-
-  setSort(property: keyof Book, direction: 'desc' | 'asc', element?: HTMLElement) {
-    this.sort.property = property;
-    this.sort.direction = direction;
-
-    if (this.sort.currentEl) {
-      this.sort.currentEl.classList.remove('is-sorted', 'is-sorted-asc', 'is-sorted-desc');
-    }
-
-    if (element) {
-      element.classList.remove('is-sorted', 'is-sorted-asc', 'is-sorted-desc');
-      element.classList.add('is-sorted', 'is-sorted-' + this.sort.direction);
-    }
-
-    this.sort.currentEl = element;
   }
 
   /**
