@@ -20,27 +20,25 @@
   padding: .35rem .5rem;
 }
 
-.datatable th.sortable {
+.datatable [sortBy] {
   cursor: pointer;
 }
 
-.datatable th.sortable::after {
-  content: 'swap_vert';
+.datatable [sortBy]::after {
+  content: 'arrow_upward';
   font-family: 'Material Symbols Outlined';
   display: inline-block;
-  opacity: .3;
   line-height: 1;
   vertical-align: middle;
   margin-left: .1rem;
+  opacity: 0;
 }
 
-.datatable th.is-sorted-asc::after {
+.datatable [sortBy].desc::after {
   content: 'arrow_downward';
-  opacity: 1;
 }
 
-.datatable th.is-sorted-desc::after {
-  content: 'arrow_upward';
+.datatable [sortBy].sorted::after {
   opacity: 1;
 }
 
