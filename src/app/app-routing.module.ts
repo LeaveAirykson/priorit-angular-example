@@ -8,18 +8,12 @@ const routes: Routes = [
     component: BookhomeComponent
   },
   {
-    path: 'edit/:id',
+    path: 'search',
     component: BookhomeComponent
   },
   {
-    path: 'search',
-    component: BookhomeComponent,
-    data: { search: true }
-  },
-  {
     path: 'filter',
-    component: BookhomeComponent,
-    data: { filter: true }
+    component: BookhomeComponent
   }
 ];
 

@@ -16,7 +16,7 @@ import { BookFilter } from '../interfaces/bookfilter.interface';
   styleUrls: ['./bookfilterform.component.css']
 })
 export class BookfilterformComponent implements OnDestroy, OnChanges {
-  @Output() update: EventEmitter<BookFilter> = new EventEmitter();
+  @Output() submit: EventEmitter<BookFilter> = new EventEmitter();
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   @Input() filter: BookFilter | null = null;
   destroy$: Subject<boolean> = new Subject();
@@ -66,6 +66,29 @@ export class BookfilterformComponent implements OnDestroy, OnChanges {
   }
 
   /**
+   * Emits submit event with form values as params.
+   *
+   * @return {void}
+   */
+  emit(): void {
+    if (!this.form.valid) {
+      return;
+    }
+
+    this.submit.emit(this.form.value);
+  }
+
+  /**
+   * Resets form and emits cancel event.
+   *
+   * @return {void}
+   */
+  abort(): void {
+    this.form.reset();
+    this.cancel.emit(true);
+  }
+
+  /**
    * Retrieves a form control by its name
    *
    * @param  {string} name
@@ -101,24 +124,5 @@ export class BookfilterformComponent implements OnDestroy, OnChanges {
 
     this.control(prefix + 'Start').updateValueAndValidity();
     this.control(prefix + 'End').updateValueAndValidity();
-  }
-
-  /**
-   * Resets form and emits cancel event.
-   *
-   * @return {void}
-   */
-  abort() {
-    this.form.reset();
-    this.cancel.emit(true);
-  }
-
-  /**
-   * Emits update event with form values as params.
-   *
-   * @return {void}
-   */
-  submit() {
-    this.update.emit(this.form.value);
   }
 }

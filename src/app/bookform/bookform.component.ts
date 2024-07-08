@@ -1,9 +1,8 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { Book } from '../interfaces/book.interface';
 import { BookService } from '../services/book.service';
-import { NotificationService } from '../services/notification.service';
 import { isbnChecksumValidator, isbnFormatValidator, isbnUsedAsyncValidator, validationPatterns } from '../utilities/book.validator';
 
 /**
@@ -19,6 +18,7 @@ export class BookformComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() set id(id: string) { this.loadBookById(id); }
   @Input() set validateIsbnChecksum(validate: boolean) { this.toggleIsbnChecksumValidator(validate); }
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
+  @Output() submit: EventEmitter<Book> = new EventEmitter();
   form!: FormGroup;
   destroy$ = new Subject();
   editmode = false;
@@ -51,9 +51,7 @@ export class BookformComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private storage: BookService,
-    private router: Router,
-    private notification: NotificationService) {
+    private storage: BookService) {
 
     this.form = this.fb.group({
       id: [''],
@@ -83,31 +81,18 @@ export class BookformComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * Submission callback for the form.
+   * Emits submit event with form values as params.
    *
    * @return {void}
    */
-  submit() {
+  emit(): void {
     if (!this.form.valid) {
       return;
     }
 
-    if (this.editmode) {
-      this.storage.update(this.form.value['id'], this.form.value)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((response) => {
-          this.notification.success(response.message);
-          this.router.navigate(['/']);
-        });
-    } else {
-      this.storage.create(this.form.value)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((response) => {
-          this.form.reset();
-          this.notification.success(response.message);
-          this.focusTitleInput();
-        })
-    }
+    this.submit.emit(this.form.value);
+    this.form.reset();
+    this.focusTitleInput();
   }
 
   /**
@@ -115,7 +100,7 @@ export class BookformComponent implements OnInit, OnDestroy, AfterViewInit {
    *
    * @return {void}
    */
-  abort() {
+  abort(): void {
     this.form.reset();
     this.cancel.emit(true);
   }
@@ -150,6 +135,7 @@ export class BookformComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadBookById(id?: string) {
     if (!id) {
       this.editmode = false;
+      this.form.reset();
       return;
     }
 
@@ -158,7 +144,6 @@ export class BookformComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((val) => {
         if (!val) {
           this.editmode = false;
-          this.router.navigate(['/edit', id]);
           return;
         }
 

@@ -1,12 +1,13 @@
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { ActivationEnd, Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { Book } from '../interfaces/book.interface';
 import { BookFilter } from '../interfaces/bookfilter.interface';
 import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
 import { BookService } from '../services/book.service';
+import { HistoryService } from '../services/history.service';
 import { NotificationService } from '../services/notification.service';
 import { filter2Rule, filterLabels, operatorMap } from '../utilities/book.helper';
-import { Subject, takeUntil } from 'rxjs';
 
 /**
  * This component lists all books found in storage.
@@ -35,21 +36,23 @@ export class BooklistComponent implements OnDestroy {
   constructor(
     private router: Router,
     private storage: BookService,
-    private notification: NotificationService) {
+    private notification: NotificationService,
+    private history: HistoryService) {
 
     this.router.events.pipe(takeUntil(this.destroy$))
       .subscribe((e) => {
         if (e instanceof ActivationEnd) {
-          if (e.snapshot.data['search']) {
+          if (e.snapshot.routeConfig?.path == 'search') {
             this.searchterm = e.snapshot.queryParams['term'];
           }
 
-          if (e.snapshot.data['filter']) {
+          if (e.snapshot.routeConfig?.path == 'filter') {
             this.setActiveFilter(e.snapshot.queryParams as BookFilter);
           }
 
-          this.editId = e.snapshot.params['id'];
-          this.showModal('edit', this.editId ? true : false);
+          this.editId = e.snapshot.queryParams['edit'];
+          const showModal = this.editId || e.snapshot.queryParams['add'] ? true : false;
+          this.showModal('edit', showModal);
 
           this.loadBooks();
         }
@@ -67,7 +70,6 @@ export class BooklistComponent implements OnDestroy {
    * @return {void}
    */
   loadBooks(): void {
-    console.log('loadbooks');
     let payload: null | Array<SearchRule | SearchOrRule> = [];
     this.searched = this.searchterm || this.filterData ? true : false;
 
@@ -99,14 +101,41 @@ export class BooklistComponent implements OnDestroy {
   }
 
   /**
-   * Triggers edit view for book with related id.
+   * Triggers showing add/edit form for book with related id.
    *
    * @param  {string} id
    *
    * @return {void}
    */
-  edit(id: string): void {
-    this.router.navigate(['/edit', id]);
+  editBook(id: string): void {
+    this.editId = id;
+    this.showModal('edit', true);
+    this.history.setParam('edit', id);
+  }
+
+  /**
+   * Triggers showing add/edit form in 'add' mode
+   *
+   * @return {void}
+   */
+  showAddForm(id = ''): void {
+    this.editId = id;
+    this.showModal('edit', true);
+    if (!id) {
+      this.history.setParam('add', 'true');
+    } else {
+      this.history.setParam('edit', id);
+    }
+  }
+
+  /**
+   * Hides edit/add form
+   *
+   * @return {void}
+   */
+  hideAddForm(): void {
+    this.showModal('edit', false);
+    this.history.removeParam(['edit', 'add']);
   }
 
   /**
@@ -116,7 +145,7 @@ export class BooklistComponent implements OnDestroy {
    *
    * @return {void}
    */
-  remove(id: string): void {
+  removeBook(id: string): void {
 
     if (!this.markedForRemoval) {
       this.markedForRemoval = this.data.find((b) => b.id == id) ?? null;
@@ -137,6 +166,30 @@ export class BooklistComponent implements OnDestroy {
   }
 
   /**
+   * Saves a book to storage
+   *
+   * @param  {Book} data
+   *
+   * @return {void}
+   */
+  saveBook(data: Book): void {
+    if (this.editId) {
+      this.storage.update(this.editId, data)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((response) => {
+          this.notification.success(response.message);
+          this.hideAddForm();
+        });
+    } else {
+      this.storage.create(data)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((response) => {
+          this.notification.success(response.message);
+        })
+    }
+  }
+
+  /**
    * Event handler for search input. Uses queryParams
    * to trigger search.
    *
@@ -144,9 +197,8 @@ export class BooklistComponent implements OnDestroy {
    *
    * @return {void}
    */
-  updateSearch(event: Event): void {
+  runSearch(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.reset();
 
     if (!input.value) {
       return;
@@ -186,8 +238,9 @@ export class BooklistComponent implements OnDestroy {
    *
    * @return {void}
    */
-  updateFilter(data: BookFilter): void {
+  runFilter(data: BookFilter): void {
     this.router.navigate(['/filter'], { queryParams: data });
+    this.showModal('filter', false);
   }
 
   /**
@@ -212,7 +265,11 @@ export class BooklistComponent implements OnDestroy {
       // label based on these values and operator data
       const val = data[k + 'Start' as keyof BookFilter] ?? null;
       const val2 = data[k + 'End' as keyof BookFilter] ?? null;
-      const lbl = [operatorMap[value]?.short ?? value, val, val2 ? '-' + val2 : ''];
+      const lbl = [operatorMap[value]?.short ?? value, val];
+
+      if (value == 'range' && val2) {
+        lbl.push('- ' + val2)
+      }
 
       filter.push({
         label: filterLabels[k],

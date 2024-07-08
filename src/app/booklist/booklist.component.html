@@ -2,7 +2,7 @@
 <div class="w-full flex flex-col gap-2 mb-4 sm:flex-row sm:justify-between items-center">
   <h1 class="mb-0">Verzeichnis</h1>
   <div class="button-group">
-    <button (click)="showModal('edit')" class="button button-primary">
+    <button (click)="showAddForm()" class="button button-primary">
       <span class="material-symbols-outlined">post_add</span>
       Buch eintragen
     </button>
@@ -29,7 +29,7 @@
   </div>
   <div class="w-full xl:w-auto">
     <input #searchfield value="{{searchterm}}" type="text" class="form-input form-input-small form-search md:min-w-96"
-      placeholder="Suche nach Titel oder ISBN" (keydown.enter)="updateSearch($event)">
+      placeholder="Suche nach Titel oder ISBN" (keydown.enter)="runSearch($event)">
   </div>
 </div>
 
@@ -73,10 +73,10 @@
         <td class="text-right">{{ book.ddc }}</td>
         <td class="text-right">{{ book.remuneration }}</td>
         <td class="text-right whitespace-nowrap">
-          <button (click)="edit(book.id)" type="button" class="button button-option" title="bearbeiten">
+          <button (click)="showAddForm(book.id)" type="button" class="button button-option" title="bearbeiten">
             <span class="material-symbols-outlined">edit</span>
           </button>
-          <button (click)="remove(book.id)" type="button" class="button button-option button-option-delete"
+          <button (click)="removeBook(book.id)" type="button" class="button button-option button-option-delete"
             title="löschen">
             <span class="material-symbols-outlined">delete</span>
           </button>
@@ -88,7 +88,7 @@
 
 <!-- filter modal -->
 <app-modal *ngIf="modalVisible['filter']" (closing)="showModal('filter',false)">
-  <app-bookfilterform width="400px" [filter]="filterData" (update)="updateFilter($event)"
+  <app-bookfilterform width="400px" [filter]="filterData" (submit)="runFilter($event)"
     (cancel)="showModal('filter', false)"></app-bookfilterform>
 </app-modal>
 
@@ -96,13 +96,13 @@
 <app-modal *ngIf="markedForRemoval" (closing)="markForRemoval()">
   <div class="text-center mb-2"><strong>"{{markedForRemoval.title}}"</strong> wirklich löschen?</div>
   <div class="button-group w-full items-center justify-center">
-    <button (click)="remove(markedForRemoval.id)" class="button button-primary">Löschen</button>
+    <button (click)="removeBook(markedForRemoval.id)" class="button button-primary">Löschen</button>
     <button (click)="markForRemoval()" class="button">Abbrechen</button>
   </div>
 </app-modal>
 
 <!-- edit/add form modal -->
-<app-modal *ngIf="modalVisible['edit']" maxWidth="800px" (closing)="showModal('edit',false)">
-  <app-bookform [id]="editId" (cancel)="showModal('edit', false)"
+<app-modal *ngIf="modalVisible['edit']" maxWidth="800px" (closing)="hideAddForm()">
+  <app-bookform [id]="editId" (submit)="saveBook($event)" (cancel)="hideAddForm()"
     [validateIsbnChecksum]="overrides['validateIsbnChecksum']"></app-bookform>
 </app-modal>
