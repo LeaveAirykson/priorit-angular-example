@@ -140,8 +140,22 @@ export class BookService {
    *
    * @return {Observable<Book>[]}
    */
-  get(rules?: Array<SearchRule | SearchOrRule>): Observable<Book[]> {
+  get(
+    rules?: Array<SearchRule | SearchOrRule>,
+    sort?: { property: keyof Book, direction: 'asc' | 'desc' }
+  ): Observable<Book[]> {
     const result = rules && rules.length ? this.data.filter((b) => matchesSearchRule(b, rules)) : this.data;
+
+    if (sort) {
+      result.sort((a, b) => {
+        if (sort.direction == 'asc') {
+          return a[sort.property] < b[sort.property] ? -1 : 1;
+        }
+
+        return a[sort.property] < b[sort.property] ? 1 : -1;
+      });
+    }
+
     return this.response<Book[]>(result);
   }
 

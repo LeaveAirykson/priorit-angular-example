@@ -12,11 +12,36 @@
 .datatable th {
   font-size: .8rem;
   background-color: #f3f3f3;
+  user-select: none;
 }
 
 .datatable th,
 .datatable td {
   padding: .35rem .5rem;
+}
+
+.datatable th.sortable {
+  cursor: pointer;
+}
+
+.datatable th.sortable::after {
+  content: 'swap_vert';
+  font-family: 'Material Symbols Outlined';
+  display: inline-block;
+  opacity: .3;
+  line-height: 1;
+  vertical-align: middle;
+  margin-left: .1rem;
+}
+
+.datatable th.is-sorted-asc::after {
+  content: 'arrow_downward';
+  opacity: 1;
+}
+
+.datatable th.is-sorted-desc::after {
+  content: 'arrow_upward';
+  opacity: 1;
 }
 
 .datatable tr:nth-child(even) {

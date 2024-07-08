@@ -53,13 +53,13 @@
   <table>
     <thead class="whitespace-nowrap">
       <tr>
-        <th>Titel</th>
-        <th>ISBN</th>
-        <th>Jahr</th>
-        <th>Seitenanzahl</th>
-        <th class="text-right">Sprache</th>
-        <th class="text-right">Sachgruppe</th>
-        <th class="text-right">Vergütungswert (€)</th>
+        <th (click)="toggleSortBy('title', $event)" class="sortable" #titleheadcell>Titel</th>
+        <th (click)="toggleSortBy('isbn', $event)" class="sortable">ISBN</th>
+        <th (click)="toggleSortBy('year', $event)" class="sortable">Jahr</th>
+        <th (click)="toggleSortBy('pagecount', $event)" class="sortable">Seitenanzahl</th>
+        <th (click)="toggleSortBy('language', $event)" class="sortable text-right">Sprache</th>
+        <th (click)="toggleSortBy('ddc', $event)" class="sortable text-right">Sachgruppe</th>
+        <th (click)="toggleSortBy('remuneration', $event)" class="sortable text-right">Vergütungswert (€)</th>
         <th></th>
       </tr>
     </thead>

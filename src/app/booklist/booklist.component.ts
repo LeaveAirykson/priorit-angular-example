@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { ActivationEnd, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { Book } from '../interfaces/book.interface';
@@ -17,8 +17,9 @@ import { filter2Rule, filterLabels, operatorMap } from '../utilities/book.helper
   selector: 'app-booklist',
   templateUrl: './booklist.component.html',
 })
-export class BooklistComponent implements OnDestroy {
+export class BooklistComponent implements OnDestroy, AfterViewInit {
   @ViewChild('searchfield') searchfield: ElementRef<HTMLInputElement>;
+  @ViewChild('titleheadcell') titleheadcell: ElementRef<HTMLElement>;
   @Input() overrides: { [key: string]: any };
   destroy$: Subject<boolean> = new Subject();
   data: Book[] = [];
@@ -27,6 +28,10 @@ export class BooklistComponent implements OnDestroy {
   markedForRemoval: Book | null = null;
   editId: string;
   filterData: BookFilter | null = null;
+  sort: { property: keyof Book; direction: 'desc' | 'asc', currentEl?: HTMLElement } = {
+    property: 'title',
+    direction: 'asc'
+  };
   activeFilter: { label: string; value: string }[] = [];
   modalVisible: { [key: string]: boolean } = {
     filter: false,
@@ -50,9 +55,12 @@ export class BooklistComponent implements OnDestroy {
             this.setActiveFilter(e.snapshot.queryParams as BookFilter);
           }
 
-          this.editId = e.snapshot.queryParams['edit'];
-          const showModal = this.editId || e.snapshot.queryParams['add'] ? true : false;
-          this.showModal('edit', showModal);
+          if (e.snapshot.queryParams['add']) {
+            this.showModal('edit', true);
+          } else {
+            this.editId = e.snapshot.queryParams['edit'];
+            this.showModal('edit', this.editId ? true : false);
+          }
 
           this.loadBooks();
         }
@@ -62,6 +70,10 @@ export class BooklistComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
+  }
+
+  ngAfterViewInit(): void {
+    this.setSort('title', 'asc', this.titleheadcell.nativeElement);
   }
 
   /**
@@ -92,7 +104,7 @@ export class BooklistComponent implements OnDestroy {
       payload = filter2Rule(this.filterData);
     }
 
-    this.storage.get(payload)
+    this.storage.get(payload, this.sort)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (result) => this.data = result,
@@ -279,6 +291,28 @@ export class BooklistComponent implements OnDestroy {
     });
 
     this.activeFilter = filter;
+  }
+
+  toggleSortBy(property: keyof Book, ev: Event) {
+    const currentEl = ev.currentTarget as HTMLElement;
+    this.setSort(property, this.sort.direction == 'asc' ? 'desc' : 'asc', currentEl);
+    this.loadBooks();
+  }
+
+  setSort(property: keyof Book, direction: 'desc' | 'asc', element?: HTMLElement) {
+    this.sort.property = property;
+    this.sort.direction = direction;
+
+    if (this.sort.currentEl) {
+      this.sort.currentEl.classList.remove('is-sorted', 'is-sorted-asc', 'is-sorted-desc');
+    }
+
+    if (element) {
+      element.classList.remove('is-sorted', 'is-sorted-asc', 'is-sorted-desc');
+      element.classList.add('is-sorted', 'is-sorted-' + this.sort.direction);
+    }
+
+    this.sort.currentEl = element;
   }
 
   /**
