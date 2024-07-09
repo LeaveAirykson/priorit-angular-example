@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { ActivationEnd, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
-import { Book } from '../interfaces/book.interface';
+import { Subject, filter, takeUntil } from 'rxjs';
+import { Book, BookData } from '../interfaces/book.interface';
 import { BookFilter } from '../interfaces/bookfilter.interface';
 import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
 import { BookService } from '../services/book.service';
@@ -45,29 +45,30 @@ export class BooklistComponent implements OnDestroy {
     private notification: NotificationService,
     private history: HistoryService) {
 
+    // react to query param changes and show/hide
+    // related modals, elements, etc.
     this.router.events.pipe(takeUntil(this.destroy$))
+      .pipe(filter((f): f is ActivationEnd => f instanceof ActivationEnd))
       .subscribe((e) => {
-        if (e instanceof ActivationEnd) {
-          // extract searchterm on /search route
-          if (e.snapshot.routeConfig?.path == 'search') {
-            this.searchterm = e.snapshot.queryParams['term'];
-          }
-
-          // extract and set active filters from queryParams on /filter route
-          if (e.snapshot.routeConfig?.path == 'filter') {
-            this.setActiveFilter(e.snapshot.queryParams as BookFilter);
-          }
-
-          // show edit modal for add/edit params
-          if (e.snapshot.queryParams['add']) {
-            this.showModal('edit', true);
-          } else {
-            this.editId = e.snapshot.queryParams['edit'];
-            this.showModal('edit', this.editId ? true : false);
-          }
-
-          this.loadBooks();
+        // extract searchterm on /search route
+        if (e.snapshot.routeConfig?.path == 'search') {
+          this.searchterm = e.snapshot.queryParams['term'];
         }
+
+        // extract and set active filters from queryParams on /filter route
+        if (e.snapshot.routeConfig?.path == 'filter') {
+          this.setActiveFilter(e.snapshot.queryParams as BookFilter);
+        }
+
+        // show edit modal for add/edit params
+        if (e.snapshot.queryParams['add']) {
+          this.showModal('edit', true);
+        } else {
+          this.editId = e.snapshot.queryParams['edit'];
+          this.showModal('edit', this.editId ? true : false);
+        }
+
+        this.loadBooks();
       });
   }
 
@@ -85,6 +86,7 @@ export class BooklistComponent implements OnDestroy {
     let payload: null | Array<SearchRule | SearchOrRule> = [];
     this.searched = this.searchterm || this.filterData ? true : false;
 
+    // create search payload
     if (this.searchterm) {
       payload = [{
         or: [{
@@ -100,6 +102,8 @@ export class BooklistComponent implements OnDestroy {
       }];
     }
 
+    // use current filters if set and
+    // no search has been requested
     if (this.filterData && !this.searchterm) {
       payload = filter2Rule(this.filterData);
     }
@@ -109,6 +113,88 @@ export class BooklistComponent implements OnDestroy {
       .subscribe({
         next: (result) => this.data = result,
         error: (error) => console.error(error)
+      });
+  }
+
+  /**
+   * Triggers showing add/edit form in 'add' mode
+   *
+   * @param  {boolean} [show=true]
+   *
+   * @return {void}
+   */
+  showAddForm(show: boolean = true): void {
+    this.showModal('edit', show);
+    if (show) {
+      this.history.setParam('add', 'true');
+    } else {
+      this.history.removeParam(['edit', 'add']);
+    }
+  }
+
+  /**
+   * Removes a book by its id from storage
+   *
+   * @param  {string} id
+   *
+   * @return {void}
+   */
+  removeBook(id: string): void {
+    // mark book to be removed, forces
+    // modal to open and user needs to confirm deletion
+    if (!this.markedForRemoval || this.markedForRemoval?.id !== id) {
+      this.markForRemoval(this.data.find((b) => b.id == id));
+      return;
+    }
+
+    // reset marked book
+    this.markForRemoval();
+
+    // run deletion
+    this.storage.removeById(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.notification.success(response.message);
+          this.data = this.data.filter((b) => b.id != id);
+        },
+        error: (error) => this.notification.error(error)
+      });
+  }
+
+  /**
+   * Saves a book to storage
+   *
+   * @param  {BookData} data
+   *
+   * @return {void}
+   */
+  saveBook(data: Partial<BookData>): void {
+    // if in edit mode update the current book
+    // and hide add/edit form afterwards
+    if (this.editId) {
+      this.storage.update(this.editId, data)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.notification.success(response.message);
+            this.loadBooks();
+            this.showAddForm(false);
+          },
+          error: (err) => this.notification.error(err)
+        });
+      return;
+    }
+
+    // otherwise create a new book
+    this.storage.create(data as BookData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.notification.success(response.message);
+          this.loadBooks();
+        },
+        error: (err) => this.notification.error(err)
       });
   }
 
@@ -123,84 +209,6 @@ export class BooklistComponent implements OnDestroy {
     this.editId = id;
     this.showModal('edit', true);
     this.history.setParam('edit', id);
-  }
-
-  /**
-   * Triggers showing add/edit form in 'add' mode
-   *
-   * @return {void}
-   */
-  showAddForm(id = ''): void {
-    this.editId = id;
-    this.showModal('edit', true);
-    if (!id) {
-      this.history.setParam('add', 'true');
-    } else {
-      this.history.setParam('edit', id);
-    }
-  }
-
-  /**
-   * Hides edit/add form
-   *
-   * @return {void}
-   */
-  hideAddForm(): void {
-    this.showModal('edit', false);
-    this.history.removeParam(['edit', 'add']);
-  }
-
-  /**
-   * Removes a book by its id from storage
-   *
-   * @param  {string} id
-   *
-   * @return {void}
-   */
-  removeBook(id: string): void {
-
-    if (!this.markedForRemoval) {
-      this.markedForRemoval = this.data.find((b) => b.id == id) ?? null;
-      return;
-    }
-
-    this.storage.removeById(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response) => {
-        if (response.success) {
-          this.notification.success(response.message);
-          this.data = this.data.filter((b) => b.id != id);
-          this.markedForRemoval = null;
-        } else {
-          this.notification.error(response.message);
-        }
-      })
-  }
-
-  /**
-   * Saves a book to storage
-   *
-   * @param  {Book} data
-   *
-   * @return {void}
-   */
-  saveBook(data: Book): void {
-    if (this.editId) {
-      this.storage.update(this.editId, data)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((response) => {
-          this.notification.success(response.message);
-          this.loadBooks();
-          this.hideAddForm();
-        });
-    } else {
-      this.storage.create(data)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((response) => {
-          this.notification.success(response.message);
-          this.loadBooks();
-        })
-    }
   }
 
   /**
@@ -267,8 +275,12 @@ export class BooklistComponent implements OnDestroy {
    */
   setActiveFilter(data: BookFilter): void {
     const filter: { label: string; value: string }[] = [];
+
+    // save current filter data values
+    // needed to populate filter form on opening
     this.filterData = Object.keys(data).length ? data : null;
 
+    // create string representations of active filters
     Object.keys(filterLabels).map((k) => {
       const value = String(data[k as keyof BookFilter]);
 

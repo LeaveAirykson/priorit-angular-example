@@ -74,7 +74,7 @@
         <td class="text-right">{{ book.ddc }}</td>
         <td class="text-right">{{ book.remuneration }}</td>
         <td class="text-right whitespace-nowrap">
-          <button (click)="showAddForm(book.id)" type="button" class="button button-option" title="bearbeiten">
+          <button (click)="editBook(book.id)" type="button" class="button button-option" title="bearbeiten">
             <span class="icon">edit</span>
           </button>
           <button (click)="removeBook(book.id)" type="button" class="button button-option button-option-delete"
@@ -103,7 +103,7 @@
 </app-modal>
 
 <!-- edit/add form modal -->
-<app-modal *ngIf="modalVisible['edit']" maxWidth="800px" (closing)="hideAddForm()">
-  <app-bookform [id]="editId" (submit)="saveBook($event)" (cancel)="hideAddForm()"
+<app-modal *ngIf="modalVisible['edit']" maxWidth="800px" (closing)="showAddForm(false)">
+  <app-bookform [id]="editId" (submit)="saveBook($event)" (cancel)="showAddForm(false)"
     [validateIsbnChecksum]="overrides['validateIsbnChecksum']"></app-bookform>
 </app-modal>
