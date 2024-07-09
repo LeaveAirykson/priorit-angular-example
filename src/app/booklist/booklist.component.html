@@ -14,8 +14,8 @@
 </div>
 
 <!-- filter and search -->
-<div class="w-full flex flex-col flex-wrap gap-4 mb-4 xl:flex-row xl:flex-nowrap">
-  <div class="inline-flex gap-2 flex-wrap items-center xl:w-full">
+<div class="w-full flex flex-col flex-wrap gap-4 mb-4 lg:flex-row lg:flex-nowrap">
+  <div class="inline-flex gap-2 flex-wrap items-center lg:w-full">
     <strong class="inline-flex items-center opacity-50 text-xs">
       <span class="icon">filter_alt</span>
       Filter
@@ -27,7 +27,7 @@
       <span class="icon">edit</span>
     </button>
   </div>
-  <div class="w-full xl:w-auto">
+  <div class="w-full lg:w-auto">
     <input #searchfield value="{{searchterm}}" type="text" class="form-input form-input-small form-search md:min-w-96"
       placeholder="Suche nach Titel oder ISBN" (keydown.enter)="runSearch($event)">
   </div>
