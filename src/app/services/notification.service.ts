@@ -22,6 +22,8 @@ export class NotificationService {
       console.error(err);
     }
 
+    options = options ?? { autoHide: false };
+
     this.notify(String(err), 'error', options);
   }
 
