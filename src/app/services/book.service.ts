@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Book, BookData } from 'src/app/interfaces/book.interface';
 import { StorageResponse } from 'src/app/interfaces/storageresponse.interface';
 import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
-import { SortEvent } from '../sortby.directive';
+import { SortEvent } from '../directives/sortby.directive';
 import { matchesSearchRule, stripDelimiter } from '../utilities/book.helper';
 
 /**

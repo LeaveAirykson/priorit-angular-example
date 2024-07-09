@@ -7,7 +7,7 @@ import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
 import { BookService } from '../services/book.service';
 import { HistoryService } from '../services/history.service';
 import { NotificationService } from '../services/notification.service';
-import { SortEvent } from '../sortby.directive';
+import { SortEvent } from '../directives/sortby.directive';
 import { filter2Rule, filterLabels, operatorMap } from '../utilities/book.helper';
 
 /**
