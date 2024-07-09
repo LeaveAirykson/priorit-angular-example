@@ -17,8 +17,12 @@ export class NotificationService {
     this.notify(message, 'success', options);
   }
 
-  error(message: string, options?: NotificationOptions) {
-    this.notify(message, 'error', options);
+  error(err: string | Error, options?: NotificationOptions) {
+    if (err instanceof Error) {
+      console.error(err);
+    }
+
+    this.notify(String(err), 'error', options);
   }
 
   info(message: string, options?: NotificationOptions) {
