@@ -12,8 +12,7 @@ import { BookFilter } from '../interfaces/bookfilter.interface';
  */
 @Component({
   selector: 'app-bookfilterform',
-  templateUrl: './bookfilterform.component.html',
-  styleUrls: ['./bookfilterform.component.css']
+  templateUrl: './bookfilterform.component.html'
 })
 export class BookfilterformComponent implements OnDestroy, OnChanges {
   @Output() submit: EventEmitter<BookFilter> = new EventEmitter();
