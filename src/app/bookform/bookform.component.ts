@@ -91,7 +91,6 @@ export class BookformComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.submit.emit(this.form.value);
-    this.form.reset();
     this.focusTitleInput();
   }
 
