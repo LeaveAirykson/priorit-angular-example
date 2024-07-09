@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Book, BookData } from 'src/app/interfaces/book.interface';
 import { StorageResponse } from 'src/app/interfaces/storageresponse.interface';
-import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
 import { SortEvent } from '../directives/sortby.directive';
+import { SearchOrRule, SearchRule } from '../interfaces/searchrule.interface';
 import { matchesSearchRule, stripDelimiter } from '../utilities/book.helper';
 
 /**
  * Service to manage the book storage.
- * As there is no backend data will be stored in clients localStorage.
+ * As there is no backend, this is more of a mock service to imitate
+ * real http requests. Data will be stored in clients localStorage.
  */
 @Injectable({
   providedIn: 'root'
@@ -25,48 +26,50 @@ export class BookService {
   /**
    * Create a book and saves it to storage
    *
-   * @param  {Book} book
+   * @param  {BookData} book
    *
    * @return {Observable<StorageResponse>}
    */
   create(data: BookData): Observable<StorageResponse> {
-    this.data.push(new Book(data));
-    this.save();
+    return new Observable((subscriber) => {
+      this.data.push(new Book(data));
+      this.save();
 
-    const response: StorageResponse = {
-      message: 'Das Buch wurde erfolgreich hinzufügt!',
-      success: true
-    };
+      subscriber.next({
+        success: true,
+        message: 'Das Buch wurde erfolgreich hinzufügt!',
+      });
 
-    return this.response<StorageResponse>(response);
+      subscriber.complete();
+    });
   }
 
   /**
    * Updates a book with given data
    *
-   * @param  {string}         id   Id of the book
-   * @param  {Partial<Book>}  data Update data
+   * @param  {string}             id   Id of the book
+   * @param  {Partial<BookData>}  data Update data
    *
    * @return {Observable<StorageResponse>}
    */
   update(id: string, data: Partial<BookData>): Observable<StorageResponse> {
-    const response: StorageResponse = {
-      success: false,
-      message: 'Das Buch mit der id "' + id + '" existiert nicht!'
-    };
+    return new Observable((subscriber) => {
 
-    let bookIdx = this.data.findIndex((b) => b.id == id);
+      let bookIdx = this.data.findIndex((b) => b.id == id);
 
-    if (bookIdx >= 0) {
+      if (bookIdx < 0) {
+        throw new Error(`Das Buch mit der id ${id} existiert nicht!`);
+      }
+
       delete data.id;
       this.data[bookIdx] = new Book(({ ...this.data[bookIdx], ...data } as BookData));
       this.save();
-      response.success = true;
-      response.message = 'Änderung wurde erfolgreich gespeichert!';
-    }
 
-    return new Observable((subscriber) => {
-      subscriber.next(response);
+      subscriber.next({
+        success: true,
+        message: 'Änderung wurde erfolgreich gespeichert.'
+      });
+
       subscriber.complete();
     });
   }
@@ -79,12 +82,16 @@ export class BookService {
    * @return {Observable<StorageResponse>}
    */
   removeById(id: string): Observable<StorageResponse> {
-    this.data = this.data.filter((b) => b.id !== id);
-    this.save();
+    return new Observable((subscriber) => {
+      this.data = this.data.filter((b) => b.id !== id);
+      this.save();
 
-    return this.response<StorageResponse>({
-      success: true,
-      message: 'Das Buch wurde erfolgreich gelöscht!',
+      subscriber.next({
+        success: true,
+        message: 'Das Buch wurde erfolgreich gelöscht!',
+      });
+
+      subscriber.complete();
     });
   }
 
@@ -107,8 +114,11 @@ export class BookService {
    * @return {Observable<Book>}
    */
   getByIsbn(isbn: string): Observable<Book> {
-    const result = this.data.find((b) => stripDelimiter(b['isbn']) == stripDelimiter(isbn));
-    return this.response<Book>(result);
+    return new Observable((subscriber) => {
+      const result = this.data.find((b) => stripDelimiter(b['isbn']) == stripDelimiter(isbn));
+      subscriber.next(result);
+      subscriber.complete();
+    });
   }
 
   /**
@@ -120,8 +130,11 @@ export class BookService {
    * @return {Observable<Book>}
    */
   getByProp(prop: keyof Book, val: any): Observable<Book> {
-    const result = this.data.find((b) => b[prop] == val);
-    return this.response<Book>(result);
+    return new Observable((subscriber) => {
+      const result = this.data.find((b) => b[prop] == val);
+      subscriber.next(result);
+      subscriber.complete();
+    });
   }
 
   /**
@@ -136,23 +149,26 @@ export class BookService {
     rules?: Array<SearchRule | SearchOrRule>,
     sort?: SortEvent
   ): Observable<Book[]> {
-    let result = this.data;
+    return new Observable((subscriber) => {
+      let result = this.data;
 
-    if (rules && rules.length) {
-      result = this.data.filter((b) => matchesSearchRule(b, rules));
-    }
+      if (rules && rules.length) {
+        result = this.data.filter((b) => matchesSearchRule(b, rules));
+      }
 
-    if (sort) {
-      result.sort((a, b) => {
-        if (sort.direction == 'asc') {
-          return a[sort.column as keyof Book] < b[sort.column as keyof Book] ? -1 : 1;
-        }
+      if (sort) {
+        result.sort((a, b) => {
+          if (sort.direction == 'asc') {
+            return a[sort.column as keyof Book] < b[sort.column as keyof Book] ? -1 : 1;
+          }
 
-        return a[sort.column as keyof Book] < b[sort.column as keyof Book] ? 1 : -1;
-      });
-    }
+          return a[sort.column as keyof Book] < b[sort.column as keyof Book] ? 1 : -1;
+        });
+      }
 
-    return this.response<Book[]>(result);
+      subscriber.next(result);
+      subscriber.complete();
+    });
   }
 
   /**
@@ -162,19 +178,5 @@ export class BookService {
    */
   private save(): void {
     localStorage.setItem(this.storename, JSON.stringify(this.data));
-  }
-
-  /**
-   * Mocks a http response observable
-   *
-   * @param  {Type} data
-   *
-   * @return {Observable<Type>}
-   */
-  private response<Type>(data?: Type): Observable<Type> {
-    return new Observable((subscriber) => {
-      subscriber.next(data);
-      subscriber.complete();
-    });
   }
 }
