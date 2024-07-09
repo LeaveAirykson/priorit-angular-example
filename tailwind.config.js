@@ -3,6 +3,7 @@ module.exports = {
   content: ['./src/**/*.{html,js,ts}'],
   theme: {
     colors: {
+      'blue-050': '#edf3f6',
       'blue-060': '#dae7ed',
       'blue-070': '#c8dce3',
       'blue-080': '#b5d0da',
@@ -53,6 +54,25 @@ module.exports = {
       'red-600': '#e32525',
       'red-700': '#ca2121',
       'red-800': '#b01d1d',
+      'gray-010': '#fafafa',
+      'gray-020': '#f5f5f5',
+      'gray-030': '#f0f0f0',
+      'gray-040': '#ebebeb',
+      'gray-050': '#e6e6e6',
+      'gray-060': '#e0e0e0',
+      'gray-070': '#dbdbdb',
+      'gray-080': '#d6d6d6',
+      'gray-090': '#d1d1d1',
+      'gray-100': '#cccccc',
+      'gray-200': '#b8b8b8',
+      'gray-300': '#a3a3a3',
+      'gray-400': '#8f8f8f',
+      'gray-500': '#7a7a7a',
+      'gray-600': '#666666',
+      'gray-700': '#525252',
+      'gray-800': '#3d3d3d',
+      'gray-900': '#292929',
+      'gray-910': '#141414',
     },
     extend: {
       screens: {
