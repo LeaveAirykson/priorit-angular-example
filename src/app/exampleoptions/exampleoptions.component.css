@@ -5,7 +5,7 @@ aside {
   right: 0;
   background: #fff;
   border: 1px solid var(--border-color);
-  z-index: 22;
+  z-index: 20;
   padding: 1rem;
   transition: transform .2s ease-in-out;
   display: flex;

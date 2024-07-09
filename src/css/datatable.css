@@ -9,17 +9,27 @@
   width: 100%;
 }
 
+.datatable th,
+.datatable td {
+  padding: .35rem .5rem;
+}
+
 .datatable th {
   font-size: .8rem;
   background-color: #f3f3f3;
   user-select: none;
 }
 
-.datatable th,
-.datatable td {
-  padding: .35rem .5rem;
+.datatable tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
+.datatable tbody tr:hover {
+  background-color: var(--blue-050);
+}
+
+/* sortables
+ --------------------------------- */
 .datatable [sortBy] {
   cursor: pointer;
 }
@@ -40,12 +50,4 @@
 
 .datatable [sortBy].sorted::after {
   opacity: 1;
-}
-
-.datatable tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.datatable tbody tr:hover {
-  background-color: var(--blue-050);
 }
