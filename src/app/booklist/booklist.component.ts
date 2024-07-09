@@ -124,6 +124,7 @@ export class BooklistComponent implements OnDestroy {
    * @return {void}
    */
   showAddForm(show: boolean = true): void {
+    this.editId = '';
     this.showModal('edit', show);
     if (show) {
       this.history.setParam('add', 'true');
@@ -177,6 +178,7 @@ export class BooklistComponent implements OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
+            console.log('does it run?');
             this.notification.success(response.message);
             this.loadBooks();
             this.showAddForm(false);
