@@ -9,7 +9,7 @@ import { Book } from '../models/book.class';
  *
  * @return {string}
  */
-export function stripDelimiter(val: string): string {
+export function stripDelimiter(val: any): string {
   return val ? String(val).trim().replace(/\s|-/gm, '') : val;
 }
 
