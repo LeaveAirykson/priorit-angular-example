@@ -30,6 +30,11 @@ export function createSearchRule(data?: O) {
     }
   });
 
+  // convert string to array
+  if ('language' in data && typeof data['language'] == 'string') {
+    data['language'] = [data['language']];
+  }
+
   // languages need to be added as an or-rule
   if ('language' in data && !data?.['language']?.includes('all')) {
     const rule: SearchRule[] = [];
