@@ -2,6 +2,6 @@
 
 set -e
 
+npm run test
 npm run build
-
 scp -r dist/priorit-angular-example/* airykson@airykson.uber.space:~/webs/html/priorit/
