@@ -90,6 +90,16 @@ export class DemoService {
         language: 'Deutsch',
         ddc: '833.92',
         remuneration: 180
+      }),
+      new Book({
+        id: 'b1719851591836',
+        title: 'The Dark Tower',
+        isbn: '978-1-473-65554-6',
+        year: 2017,
+        language: 'Englisch',
+        pagecount: 237,
+        ddc: '823.91',
+        remuneration: 120
       })
     ];
 
