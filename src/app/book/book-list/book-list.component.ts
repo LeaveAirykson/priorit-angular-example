@@ -44,8 +44,6 @@ export class BookListComponent implements OnInit, OnDestroy {
     private history: HistoryService) { }
 
   ngOnInit(): void {
-    console.log('book-list: init');
-
     this.route.queryParams
       .pipe(takeUntil(this.destroy$))
       .subscribe(params => this.consumeParams(params));
@@ -65,7 +63,6 @@ export class BookListComponent implements OnInit, OnDestroy {
    * @return {void}
    */
   consumeParams(params: O): void {
-    console.log('book-list: queryParams');
     this.searchterm = params['term'];
     this.chartVisible = params['chart'] ? true : false;
     this.editId = params['edit'];
@@ -183,7 +180,6 @@ export class BookListComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            console.log('does it run?');
             this.notification.success(response.message);
             this.loadBooks();
             this.showAddForm(false);
@@ -271,9 +267,6 @@ export class BookListComponent implements OnInit, OnDestroy {
    * @return {void}
    */
   filter(data: BookFilter): void {
-
-    console.log('run filter');
-
     this.router.navigate(['/filter'], {
       queryParams: {
         chart: this.chartVisible ? true : undefined,
