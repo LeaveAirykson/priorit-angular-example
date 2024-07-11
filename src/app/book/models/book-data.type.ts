@@ -1,3 +1,6 @@
+/**
+ * Minimal dataset needed for creating a Book instance
+ */
 export type BookData = {
   id?: string;
   title: string;

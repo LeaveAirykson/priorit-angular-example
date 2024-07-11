@@ -4,6 +4,9 @@ import { SortDirectionMap } from '../models/sort-direction-map.type';
 
 const directions: SortDirectionMap = { desc: 'asc', asc: 'desc' };
 
+/**
+ * Child directive used in correlation with SortableDirective.
+ */
 @Directive({
   selector: '[sortBy]'
 })

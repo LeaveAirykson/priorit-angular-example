@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { SortEvent } from 'src/app/core/models/sort-event.type';
-import { Obool } from '../../core/models/generics.interface';
+import { O, Obool } from '../../core/models/generics.interface';
 import { HistoryService } from '../../core/services/history.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { BookData } from '../models/book-data.type';
@@ -48,21 +48,31 @@ export class BookListComponent implements OnInit, OnDestroy {
 
     this.route.queryParams
       .pipe(takeUntil(this.destroy$))
-      .subscribe(params => {
-        console.log('book-list: queryParams');
-        this.searchterm = params['term'];
-        this.chartVisible = params['chart'] ? true : false;
-        this.editId = params['edit'];
-        this.showModal('edit', params['add'] || this.editId ? true : false);
-        this.setFilter(params as BookFilter);
-        this.searched = this.route.snapshot.data['searched'] ?? false;
-        this.loadBooks();
-      });
+      .subscribe(params => this.consumeParams(params));
   }
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
+  }
+
+  /**
+   * Consumes passed params and updates
+   * related properties.
+   *
+   * @param  {O} params
+   *
+   * @return {void}
+   */
+  consumeParams(params: O): void {
+    console.log('book-list: queryParams');
+    this.searchterm = params['term'];
+    this.chartVisible = params['chart'] ? true : false;
+    this.editId = params['edit'];
+    this.showModal('edit', params['add'] || this.editId ? true : false);
+    this.setFilter(params as BookFilter);
+    this.searched = this.route.snapshot.data['searched'] ?? false;
+    this.loadBooks();
   }
 
   /**
@@ -73,8 +83,6 @@ export class BookListComponent implements OnInit, OnDestroy {
   loadBooks(): void {
     const payload = this.createSearchPayload();
 
-    console.log('book-list: payload', payload);
-
     this.storage.get(payload, this.sort)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -83,10 +91,13 @@ export class BookListComponent implements OnInit, OnDestroy {
       });
   }
 
-  createSearchPayload() {
+  /**
+   * Creates search payload based on search and filter data.
+   *
+   * @return {Array<SearchRule | SearchOrRule>}
+   */
+  createSearchPayload(): Array<SearchRule | SearchOrRule> {
     let payload: null | Array<SearchRule | SearchOrRule> = [];
-
-    console.log('book-list: filterdata', this.filterData);
 
     if (this.filterData) {
       payload = createSearchRule(this.filterData);

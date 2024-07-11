@@ -8,26 +8,4 @@ import { Component } from '@angular/core';
   selector: 'app-book-home',
   templateUrl: './book-home.component.html',
 })
-export class BookHomeComponent {
-  /**
-   * unspecific options used to change behaviour
-   * of the example application
-   */
-  options: { [key: string]: any; } = {
-    validateIsbnChecksum: true
-  }
-
-  /**
-   * Overrides example options to change
-   * behaviour of the example application
-   *
-   * @param  {object} opt
-   * @param  {string} opt.key
-   * @param  {any}    opt.val
-   *
-   * @return {void}
-   */
-  overrideOption(opt: { key: string; val: any }) {
-    this.options[opt.key] = opt.val;
-  }
-}
+export class BookHomeComponent { }

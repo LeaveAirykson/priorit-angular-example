@@ -23,6 +23,11 @@ export class NotificationAreaComponent implements OnInit, OnDestroy {
       .subscribe((notification) => this.add(notification));
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
+
   /**
    * Adds a notification to the notification stack
    *
@@ -52,10 +57,5 @@ export class NotificationAreaComponent implements OnInit, OnDestroy {
    */
   remove(id: string) {
     this.notifications = this.notifications.filter((f) => f.id !== id);
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.complete();
   }
 }

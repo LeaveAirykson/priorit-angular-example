@@ -35,6 +35,10 @@ export class ModalComponent implements OnInit, OnDestroy {
     document.addEventListener('keydown', this.onKeydown.bind(this))
   }
 
+  ngOnDestroy(): void {
+    document.removeEventListener('keydown', this.onKeydown);
+  }
+
   /**
    * Event handler for catching escape key to
    * trigger ModalComponent.close()
@@ -45,9 +49,5 @@ export class ModalComponent implements OnInit, OnDestroy {
    */
   onKeydown(event: KeyboardEvent) {
     event.key == 'Escape' && this.close();
-  }
-
-  ngOnDestroy(): void {
-    document.removeEventListener('keydown', this.onKeydown);
   }
 }

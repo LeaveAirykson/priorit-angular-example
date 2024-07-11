@@ -53,13 +53,14 @@ export class BookFormComponent implements OnInit, OnDestroy, AfterViewInit {
     private fb: FormBuilder,
     private storage: BookService,
     private demoService: DemoService) {
-
     this.form = this.createForm();
 
-    this.toggleIsbnChecksumValidator(this.demoService.getOption('validateIsbnCheckSum'));
+    // initially set isbns checksum validator
+    this.activateChecksumValidator(this.demoService.getOption('validateIsbnCheckSum'));
 
+    // change isbn checksum validator when demo service tells you to
     this.demoService.updated.pipe(takeUntil(this.destroy$))
-      .subscribe((options) => this.toggleIsbnChecksumValidator(options['validateIsbnCheckSum']));
+      .subscribe((options) => this.activateChecksumValidator(options['validateIsbnCheckSum']));
 
   }
 
@@ -76,6 +77,11 @@ export class BookFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroy$.complete();
   }
 
+  /**
+   * Creates the form
+   *
+   * @return {FormGroup}
+   */
   createForm(): FormGroup {
     return this.fb.group({
       id: [''],
@@ -124,7 +130,7 @@ export class BookFormComponent implements OnInit, OnDestroy, AfterViewInit {
    *
    * @return {void}
    */
-  private toggleIsbnChecksumValidator(activate: boolean) {
+  private activateChecksumValidator(activate: boolean): void {
     if (activate) {
       this.form.controls['isbn'].addValidators(isbnChecksumValidator);
     } else {

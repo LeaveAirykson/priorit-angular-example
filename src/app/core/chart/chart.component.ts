@@ -1,15 +1,17 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { Chart, ChartConfiguration } from 'chart.js/auto';
 
-
+/**
+ * Wrapper component for chart.js
+ */
 @Component({
   selector: 'app-chart',
-  templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.css']
+  templateUrl: './chart.component.html'
 })
 export class ChartComponent implements AfterViewInit, OnChanges {
   @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
   @Input() config: ChartConfiguration;
+  @Input() height: string = '320px';
   chart: any;
 
   ngAfterViewInit(): void {

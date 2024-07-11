@@ -13,7 +13,6 @@ import { DemoService } from '../services/demo.service';
 
 export class DemoToolbarComponent {
 
-
   constructor(public demoService: DemoService) { }
 
   toggleValidateIsbnCheckSum(event: Event) {

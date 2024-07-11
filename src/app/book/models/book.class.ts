@@ -1,6 +1,9 @@
 import { calculateRemuneration } from '../utilities/calculate-remuneration.helper';
 import { BookData } from './book-data.type';
 
+/**
+ * Book model
+ */
 export class Book {
   id: string;
   title: string;

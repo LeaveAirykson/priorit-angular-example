@@ -2,6 +2,9 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Book } from 'src/app/book/models/book.class';
 import { O } from '../models/generics.interface';
 
+/**
+ * Service to handle demo related logic.
+ */
 @Injectable({
   providedIn: 'root'
 })

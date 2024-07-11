@@ -1,3 +1,6 @@
+/**
+ * Filter object used in retrieving Books
+ */
 export type BookFilter = {
   year: string;
   yearStart: number;

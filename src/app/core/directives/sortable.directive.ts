@@ -3,12 +3,19 @@ import { Subject, takeUntil } from 'rxjs';
 import { SortbyDirective } from './sortby.directive';
 import { SortDirection } from '../models/sort-direction.type';
 import { SortEvent } from '../models/sort-event.type';
+import { O } from '../models/generics.interface';
 
+/**
+ * This directive is used to sort an array of data.
+ * The triggers in form of SortbyDirectives need to exist inside
+ * the content of the related element.
+ * If this.sortable is passed, it will sort the array in place.
+ */
 @Directive({ selector: '[sortable]' })
 export class SortableDirective implements AfterContentInit, OnDestroy {
   @Input() column: string;
   @Input() direction: SortDirection;
-  @Input() sortable: { [key: string]: any }[] = [];
+  @Input() sortable: O[] = [];
   @Output() sorted = new EventEmitter();
   @ContentChildren(SortbyDirective) sortByDirectives!: QueryList<SortbyDirective>;
   destroy$: Subject<boolean> = new Subject();

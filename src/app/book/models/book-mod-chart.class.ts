@@ -1,9 +1,17 @@
 import { ChartConfiguration } from 'chart.js';
 import { Book } from './book.class';
 import { SortDirection } from 'src/app/core/models/sort-direction.type';
+import { O } from 'src/app/core/models/generics.interface';
 
+/**
+ * Wrapper class for chart.js to dynamically parse and change
+ * configurations for charts.
+ */
 export class BookModChart {
 
+  /**
+   * The configuration passed to chart.js
+   */
   config: ChartConfiguration = {
     type: 'bar',
     data: { datasets: [] },
@@ -21,18 +29,34 @@ export class BookModChart {
     }
   };
 
+  /**
+   * Options respected by .parse() to possibly alter
+   * construction of configuration
+   */
   opts: { [key: string]: any } = {
     dimension: 'year',
     sortDirection: 'asc'
   }
 
+  /**
+   * Labels/titles for the different dimensions
+   */
   titles: { [key: string]: string } = {
     ddc: 'Verteilung nach Sachgruppe (erste Ebene)',
     year: 'Verteilung nach Jahren',
     language: 'Verteilung nach Sprachen'
   };
 
-  parse(input: Book[], opts?: { [key: string]: any }): this {
+  /**
+   * Parses input data and options to restructure
+   * data and recreate configuration based on it.
+   *
+   * @param  {Book[]} input
+   * @param  {O}      [opts]
+   *
+   * @return {this}
+   */
+  parse(input: Book[], opts?: O): this {
     input = JSON.parse(JSON.stringify(input));
 
     if (opts) {
