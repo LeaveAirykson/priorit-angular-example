@@ -12,6 +12,7 @@
 - Über den Button "Testdaten erstellen" werden vordefinierte Bücher erstellt um das Interface schneller testen zu können.
 - Nachdem es kein Backend gibt, beinhaltet das Beispiel gewisse Logiken, die in der Praxis sinnvoller serverseitig abgehandelt werden sollten. Wie Beispielsweise das speichern, suchen, filtern und sortieren der Datensätze.
 - Die Filter gelten als "und" Konditionen, wobei für die Felder "Sprache" und "Sachgruppe" bei einer Mehrauswahl "oder" Konditionen ausgeführt werden.
+- Der 10% Zuschlag für deutsche Bücher wird von der Zwischensumme (Basisbetrag \* Faktor) berechnet.
 
 ## Verbesserungen/weitere Überlegungen
 
