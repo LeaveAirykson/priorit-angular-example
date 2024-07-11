@@ -8,9 +8,9 @@
 
 ## Anmerkungen
 
-- Die ISBN Nummer wird nicht nur syntaktisch validiert, sondern auch deren Prüfzimmer. Dieses Verhalten lässt sich für die Testzwecke über die Toolbar unten deaktivieren.
-- Über den Button "Testdaten erstellen" werden 6 vordefinierte Bücher erstellt um das Interface schneller testen zu können.
-- Nachdem es kein Backend gibt, beinhaltet das Beispiel gewisse Logiken, die in der Praxis sinnvoller serverseitig abgehandelt werden sollten. Wie Beispielsweise das laden, suchen, filtern, sortieren der Datensätze.
+- Die Validierung der ISBN Nummer inkludiert neben der Prüfung der Syntax auch die Überprüfung der Prüfziffer. Dieses Verhalten lässt sich für die Testzwecke über die Demo Toolbar deaktivieren.
+- Über den Button "Testdaten erstellen" werden vordefinierte Bücher erstellt um das Interface schneller testen zu können.
+- Nachdem es kein Backend gibt, beinhaltet das Beispiel gewisse Logiken, die in der Praxis sinnvoller serverseitig abgehandelt werden sollten. Wie Beispielsweise das speichern, suchen, filtern und sortieren der Datensätze.
 - Die Filter gelten als "und" Konditionen, wobei für die Felder "Sprache" und "Sachgruppe" bei einer Mehrauswahl "oder" Konditionen ausgeführt werden.
 
 ## Verbesserungen/weitere Überlegungen
