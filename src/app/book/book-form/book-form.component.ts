@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { DemoService } from '../../core/services/demo.service';
 import { Book } from '../models/book.class';
 import { BookService } from '../services/book.service';
 import { isbnChecksumValidator, isbnFormatValidator, isbnUsedAsyncValidator, validationPatterns } from '../utilities/book.validator';
-import { DemoService } from '../../core/services/demo.service';
 
 /**
  * This component displays the edit/add form for books.
