@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BookFormComponent } from './book-form.component';
-import { RemunerationPipe } from '../remuneration.pipe';
+import { RemunerationPipe } from '../pipes/remuneration.pipe';
 import { ReactiveFormsModule } from '@angular/forms';
 
 describe('BookFormComponent', () => {

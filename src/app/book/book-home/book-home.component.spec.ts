@@ -1,10 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { BookHomeComponent } from './book-home.component';
-import { BookListComponent } from '../book-list/book-list.component';
-import { DemoToolbarComponent } from '../demo-toolbar/demo-toolbar.component';
 import { CommonModule } from '@angular/common';
-import { AppRoutingModule } from '../app-routing.module';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppRoutingModule } from '../../app-routing.module';
+import { BookChartComponent } from '../book-chart/book-chart.component';
+import { BookListComponent } from '../book-list/book-list.component';
+import { BookHomeComponent } from './book-home.component';
+import { DemoToolbarComponent } from '../../core/demo-toolbar/demo-toolbar.component';
+import { SortableDirective } from '../../core/directives/sortable.directive';
 
 describe('BookHomeComponent', () => {
   let component: BookHomeComponent;
@@ -12,7 +13,12 @@ describe('BookHomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BookHomeComponent, BookListComponent, DemoToolbarComponent],
+      declarations: [
+        BookHomeComponent,
+        BookChartComponent,
+        BookListComponent,
+        DemoToolbarComponent,
+        SortableDirective],
       imports: [CommonModule, AppRoutingModule]
     })
       .compileComponents();

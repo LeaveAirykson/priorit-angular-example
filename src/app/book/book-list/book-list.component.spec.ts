@@ -1,10 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { BookListComponent } from './book-list.component';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from '../app-routing.module';
-import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from '../../app-routing.module';
+import { BookListComponent } from './book-list.component';
+import { BookChartComponent } from '../book-chart/book-chart.component';
+import { SortableDirective } from '../../core/directives/sortable.directive';
+import { SortbyDirective } from '../../core/directives/sortby.directive';
 
 describe('BookListComponent', () => {
   let component: BookListComponent;
@@ -12,7 +14,7 @@ describe('BookListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BookListComponent],
+      declarations: [BookListComponent, BookChartComponent, SortableDirective, SortbyDirective],
       imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, CommonModule]
     })
       .compileComponents();
