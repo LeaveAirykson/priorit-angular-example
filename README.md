@@ -4,7 +4,12 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Notice
 
-If angular is not installed globally prefix the commands in this README with `npx` to execute them with the locally installed angular 15 version.
+If angular is not installed globally prefix the `ng` commands with `npx` to execute them with the locally installed angular 15 version.
+
+```
+npx ng serve
+npx ng [...]
+```
 
 ## Tech stack
 
@@ -28,11 +33,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Run `npm run test` to execute the unit tests via [Jest](https://jestjs.io/).
 
 ## Further help
 
