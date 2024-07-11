@@ -16,12 +16,12 @@
 
 .datatable th {
   font-size: .8rem;
-  background-color: #f3f3f3;
   user-select: none;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .datatable tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: var(--gray-010);
 }
 
 .datatable tbody tr:hover {

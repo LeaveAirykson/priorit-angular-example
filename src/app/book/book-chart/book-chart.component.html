@@ -1,0 +1,12 @@
+<div class="p-2 bg-gray-010" *ngIf="chartVisible">
+  <app-chart [config]="chart.config">
+    <div class="form-field flex-row items-center">
+      <label class="form-label">Dimension</label>
+      <select [formControl]="dimensionField" class="form-input form-input-small w-auto">
+        <option value="year">Jahr</option>
+        <option value="ddc">Sachgruppe</option>
+        <option value="language">Sprache</option>
+      </select>
+    </div>
+  </app-chart>
+</div>

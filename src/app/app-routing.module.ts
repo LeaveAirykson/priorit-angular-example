@@ -1,19 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { BookhomeComponent } from './bookhome/bookhome.component';
+import { BookHomeComponent } from './book/book-home/book-home.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: BookhomeComponent
+    component: BookHomeComponent
   },
   {
     path: 'search',
-    component: BookhomeComponent
+    component: BookHomeComponent,
+    data: { searched: true }
   },
   {
     path: 'filter',
-    component: BookhomeComponent
+    component: BookHomeComponent,
+    data: { searched: true }
   }
 ];
 

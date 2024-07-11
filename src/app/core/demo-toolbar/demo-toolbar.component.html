@@ -1,0 +1,13 @@
+<aside>
+  <div class="flex gap-4 flex-col">
+    <label class="cursor-pointer flex gap-2">
+      <input type="checkbox" class="form-input" [checked]="demoService.options['validateIsbnCheckSum']"
+        (change)="toggleValidateIsbnCheckSum($event)"><span>ISBN Prüfziffer
+        validieren</span>
+    </label>
+  </div>
+  <div>
+    <button class="button button-small" (click)="demoService.createDummyData()">Testdaten erstellen</button>
+  </div>
+</aside>
+<div class="h-20"></div>

@@ -1,0 +1,116 @@
+<!-- titlebar -->
+<div class="w-full flex flex-col gap-2 mb-4 sm:flex-row sm:justify-between items-center">
+  <h1 class="mb-0">Verzeichnis</h1>
+  <div class="button-group">
+    <button (click)="showAddForm()" class="button button-primary">
+      <span class="icon">post_add</span>
+      Buch eintragen
+    </button>
+  </div>
+</div>
+
+<!-- filter and search -->
+<div class="w-full flex flex-col flex-wrap gap-4 mb-4 lg:flex-row lg:flex-nowrap">
+  <div class="inline-flex gap-2 flex-wrap items-center lg:w-full">
+    <strong class="inline-flex items-center opacity-50 text-xs">
+      <span class="icon">filter_alt</span>
+      Filter
+    </strong>
+    <button class="button button-icon" (click)="showModal('filter')" title="Filter bearbeiten">
+      <span class="icon">edit</span>
+    </button>
+    <span class="flag" *ngFor="let filter of activeFilter">
+      {{ filter.label }} <strong>{{ filter.value }}</strong>
+    </span>
+  </div>
+  <div class="w-full lg:w-auto">
+    <input #searchfield value="{{searchterm}}" type="text" class="form-input form-input-small form-search md:min-w-96"
+      placeholder="Suche nach Titel oder ISBN" (keydown.enter)="search()">
+  </div>
+</div>
+
+<div class="mt-4 mb-2 lg:grid lg:grid-cols-12">
+  <!-- search and filter result notice -->
+  <div *ngIf="searched" class="lg:col-span-8 lg:col-start-3">
+    <div class="flex justify-center gap-2 items-center flex-wrap">
+      <span>
+        {{data.length ? data.length : 'Keine' }} Ergebnis(se) gefunden
+        <span *ngIf="searchterm">für: '{{searchterm}}'</span>
+      </span>
+      <div class="button-group">
+        <button class="button button-icon" title="zurücksetzen" (click)="reset()"><span
+            class="icon">close</span></button>
+        <button (click)="loadBooks()" class="button button-icon" title="Aktualisieren">
+          <span class="icon">refresh</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="text-right lg:col-start-11 lg:col-span-2">
+    <button class="button button-option" (click)="toggleChart()">
+      <span class="icon text-blue-600">bar_chart</span>
+      Verteilung
+    </button>
+  </div>
+</div>
+
+<!-- data chart -->
+<app-book-chart [chartVisible]="chartVisible" [data]="data"></app-book-chart>
+
+<!-- books data table -->
+<div class="datatable mt-4">
+  <table>
+    <thead class="whitespace-nowrap">
+      <tr [sortable]="data" [column]="sort.column" [direction]="sort.direction" (sorted)="sort=$event">
+        <th sortBy="title">Titel</th>
+        <th sortBy="isbn">ISBN</th>
+        <th sortBy="year">Jahr</th>
+        <th sortBy="pagecount">Seitenanzahl</th>
+        <th sortBy="language" class="text-right">Sprache</th>
+        <th sortBy="ddc" class="text-right">Sachgruppe</th>
+        <th sortBy="remuneration" class="text-right">Vergütungswert (€)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let book of data">
+        <td>{{ book.title }}</td>
+        <td>{{ book.isbn }}</td>
+        <td>{{ book.year }}</td>
+        <td>{{ book.pagecount }}</td>
+        <td class="text-right">{{ book.language }}</td>
+        <td class="text-right">{{ book.ddc }}</td>
+        <td class="text-right">{{ book.remuneration }}</td>
+        <td class="text-right whitespace-nowrap">
+          <button (click)="edit(book.id)" type="button" class="button button-option" title="bearbeiten">
+            <span class="icon">edit</span>
+          </button>
+          <button (click)="remove(book.id)" type="button" class="button button-option button-option-delete"
+            title="löschen">
+            <span class="icon">delete</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- filter modal -->
+<app-modal *ngIf="modalVisible['filter']" (closing)="showModal('filter',false)">
+  <app-book-filter-form width="400px" [filter]="filterData" (submit)="filter($event)"
+    (cancel)="showModal('filter', false)"></app-book-filter-form>
+</app-modal>
+
+<!-- deletion modal -->
+<app-modal *ngIf="markedForRemoval" (closing)="markForRemoval(null)">
+  <div class="text-center mb-2"><strong>"{{markedForRemoval.title}}"</strong> wirklich löschen?</div>
+  <div class="button-group w-full items-center justify-center">
+    <button (click)="remove(markedForRemoval.id)" class="button button-primary">Löschen</button>
+    <button (click)="markForRemoval(null)" class="button">Abbrechen</button>
+  </div>
+</app-modal>
+
+<!-- edit/add form modal -->
+<app-modal *ngIf="modalVisible['edit']" maxWidth="800px" (closing)="showAddForm(false)">
+  <app-book-form [id]="editId" (submit)="save($event)" (cancel)="showAddForm(false)"></app-book-form>
+</app-modal>

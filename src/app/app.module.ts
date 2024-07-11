@@ -1,32 +1,37 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { BooklistComponent } from './booklist/booklist.component';
-import { BookformComponent } from './bookform/bookform.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
-import { BookhomeComponent } from './bookhome/bookhome.component';
-import { RemunerationPipe } from './pipes/remuneration.pipe';
-import { ExampleoptionsComponent } from './exampleoptions/exampleoptions.component';
-import { NotificationareaComponent } from './notificationarea/notificationarea.component';
-import { ModalComponent } from './modal/modal.component';
-import { BookfilterformComponent } from './bookfilterform/bookfilterform.component';
-import { SortableDirective } from './directives/sortable.directive';
-import { SortbyDirective } from './directives/sortby.directive';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DemoToolbarComponent } from './core/demo-toolbar/demo-toolbar.component';
+import { NotificationAreaComponent } from './core/notification-area/notification-area.component';
+import { ModalComponent } from './core/modal/modal.component';
+import { SortableDirective } from './core/directives/sortable.directive';
+import { SortbyDirective } from './core/directives/sortby.directive';
+import { ChartComponent } from './core/chart/chart.component';
+import { BookListComponent } from './book/book-list/book-list.component';
+import { BookFormComponent } from './book/book-form/book-form.component';
+import { BookHomeComponent } from './book/book-home/book-home.component';
+import { BookChartComponent } from './book/book-chart/book-chart.component';
+import { BookFilterFormComponent } from './book/book-filter-form/book-filter-form.component';
+import { RemunerationPipe } from './book/pipes/remuneration.pipe';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    BooklistComponent,
-    BookformComponent,
-    BookhomeComponent,
+    BookListComponent,
+    BookFormComponent,
+    BookHomeComponent,
     RemunerationPipe,
-    ExampleoptionsComponent,
-    NotificationareaComponent,
+    DemoToolbarComponent,
+    NotificationAreaComponent,
     ModalComponent,
-    BookfilterformComponent,
     SortableDirective,
-    SortbyDirective
+    SortbyDirective,
+    ChartComponent,
+    BookChartComponent,
+    BookFilterFormComponent
   ],
   imports: [
     BrowserModule,
