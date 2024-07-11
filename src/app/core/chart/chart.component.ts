@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { Chart, ChartConfiguration } from 'chart.js/auto';
+import { ChartConfiguration, Chart, BarController, CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title, Colors } from 'chart.js';
+Chart.register(BarController, LinearScale, CategoryScale, BarElement, Tooltip, Legend, Title, Colors);
 
 /**
  * Wrapper component for chart.js
