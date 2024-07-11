@@ -13,6 +13,7 @@ import { SearchRule } from '../models/search-rule.interface';
 import { BookService } from '../services/book.service';
 import { filterLabels, operatorMap } from '../utilities/book.helper';
 import { createSearchRule } from '../utilities/create-search-rule.helper';
+import { BookFormComponent } from '../book-form/book-form.component';
 
 /**
  * This component lists all books found in storage.
@@ -24,6 +25,7 @@ import { createSearchRule } from '../utilities/create-search-rule.helper';
 })
 export class BookListComponent implements OnInit, OnDestroy {
   @ViewChild('searchfield') searchfield: ElementRef<HTMLInputElement>;
+  @ViewChild(BookFormComponent, { static: false }) bookForm: BookFormComponent;
   destroy$: Subject<boolean> = new Subject();
   data: Book[] = [];
   modalVisible: Obool = { filter: false, edit: false };
@@ -196,6 +198,7 @@ export class BookListComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.notification.success(response.message);
           this.loadBooks();
+          this.bookForm?.form?.reset();
         },
         error: (err) => this.notification.error(err)
       });
