@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+npm run build
+
+scp -r dist/priorit-angular-example/* airykson@airykson.uber.space:~/webs/html/priorit/
